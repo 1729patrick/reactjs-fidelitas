@@ -4,9 +4,7 @@ import Routes from './views/index';
 
 function App() {
   return (
-    <div >
     <Routes />
-    </div>
   );
 }
 
