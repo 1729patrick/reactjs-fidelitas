@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,8 +11,12 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CreateUpdateModal from '../CreateUpdateModal';
+import { format } from 'date-fns';
 
 import Paper from '@material-ui/core/Paper';
+import { Button } from '@material-ui/core';
 
 interface Data {
   calories: number;
@@ -106,7 +110,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           </TableCell>
         ))}
         {actions && (
-          <TableCell align={'left'} padding={'default'}>
+          <TableCell align={'left'} padding={'none'}>
             <TableSortLabel>Ações</TableSortLabel>
           </TableCell>
         )}
@@ -145,20 +149,25 @@ type Props = {
   data: any;
   fields: any;
   actions?: boolean;
+  title?: string;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
   data,
   fields,
   actions = false,
+  title,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
+  const [openModal, setOpenModal] = useState(false);
 
   const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const modalDataRef = useRef();
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -183,13 +192,46 @@ const ResponsiveTable: React.FC<Props> = ({
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
-  const boleanToString = (bool: boolean) => {
+  const booleanToString = (bool: boolean) => {
     return bool ? 'Ativo' : 'Inativo';
+  };
+
+  const cellRenderByType = (type: string, value: any) => {
+    if (type === 'boolean') {
+      return booleanToString(value);
+    } else if (type === 'object') {
+      return format(value, 'yyyy/MM/dd');
+    } else {
+      return value;
+    }
+  };
+
+  const handleModal = (data?: any) => {
+    //useRef para transportar dados se existirem para dentro dos fields do modal
+    if (data) {
+      modalDataRef.current = data;
+    }
+
+    setOpenModal(!openModal);
   };
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}>
+          <Button
+            style={{ marginTop: '10px', marginRight: '10px' }}
+            variant="contained"
+            startIcon={<AddCircleIcon />}
+            onClick={handleModal}>
+            Adicionar {title}
+          </Button>
+        </div>
         <TableContainer>
           <Table
             className={classes.table}
@@ -204,6 +246,16 @@ const ResponsiveTable: React.FC<Props> = ({
               fields={fields}
               actions={actions}
             />
+            {openModal && (
+              <CreateUpdateModal
+                open={openModal}
+                handleCloseModal={handleModal}
+                fields={fields}
+                title={title}
+                dataRef={modalDataRef}
+              />
+            )}
+
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -214,15 +266,15 @@ const ResponsiveTable: React.FC<Props> = ({
                         (value, i) =>
                           i !== 0 && (
                             <TableCell align={'left'} key={i}>
-                              {typeof d[value] === 'boolean'
-                                ? boleanToString(d[value])
-                                : d[value]}
+                              {cellRenderByType(typeof d[value], d[value])}
                             </TableCell>
                           ),
                       )}
                       {actions && (
                         <TableCell align={'left'}>
-                          <IconButton aria-label="edit">
+                          <IconButton
+                            aria-label="edit"
+                            onClick={() => handleModal(d)}>
                             <EditIcon />{' '}
                           </IconButton>
                           <IconButton aria-label="delete">

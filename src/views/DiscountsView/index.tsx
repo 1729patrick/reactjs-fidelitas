@@ -9,8 +9,8 @@ const discountsData = [
     costPoints: 0,
     costVisits: 3,
     isActive: true,
-    createdAt: '21/04/2020',
-    expirationDate: '23/04/2020',
+    expirationDate: new Date('2014-08-18T21:11:54'),
+    createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 2,
@@ -18,8 +18,8 @@ const discountsData = [
     costPoints: 50,
     costVisits: 1,
     isActive: false,
-    createdAt: '22/04/2020',
-    expirationDate: '25/04/2020',
+    expirationDate: new Date('2014-08-18T21:11:54'),
+    createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 3,
@@ -27,8 +27,8 @@ const discountsData = [
     costPoints: 500,
     costVisits: 0,
     isActive: true,
-    createdAt: '23/04/2020',
-    expirationDate: '28/04/2020',
+    expirationDate: new Date('2014-08-18T21:11:54'),
+    createdAt: new Date('2014-08-18T21:11:54'),
   },
 ];
 interface HeadCell {
@@ -36,6 +36,8 @@ interface HeadCell {
   id: string;
   label: string;
   numeric: boolean;
+  type: string;
+  isEditable: boolean;
 }
 const headCells: HeadCell[] = [
   {
@@ -43,38 +45,60 @@ const headCells: HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Descrição',
+    type: 'text',
+    isEditable: true,
   },
   {
     id: 'costPoints',
     numeric: true,
     disablePadding: false,
     label: 'Custo em pontos',
+    type: 'number',
+    isEditable: true,
   },
   {
     id: 'costVisits',
     numeric: true,
     disablePadding: false,
     label: 'Custo em visitas',
+    type: 'number',
+    isEditable: true,
   },
-  { id: 'isActive', numeric: false, disablePadding: false, label: 'Estado' },
   {
-    id: 'createdAt',
+    id: 'isActive',
     numeric: false,
     disablePadding: false,
-    label: 'Criado em',
+    label: 'Estado',
+    type: 'text',
+    isEditable: true,
   },
   {
     id: 'expirationDate',
     numeric: false,
     disablePadding: false,
     label: 'Expira em',
+    type: 'date',
+    isEditable: true,
+  },
+  {
+    id: 'createdAt',
+    numeric: false,
+    disablePadding: false,
+    label: 'Criado em',
+    type: 'number',
+    isEditable: false,
   },
 ];
 
 const DiscountsView = () => {
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable data={discountsData} fields={headCells} actions={true} />
+      <ResponsiveTable
+        data={discountsData}
+        fields={headCells}
+        actions={true}
+        title={'Desconto'}
+      />
     </ResponsiveDrawer>
   );
 };

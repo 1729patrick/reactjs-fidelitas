@@ -12,6 +12,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'no-console': 1,
     'react/jsx-pascal-case': 'off',
+    'no-undef': 'off',
+    'react/prop-types': 'off',
   },
   settings: {
     'import/resolver': {

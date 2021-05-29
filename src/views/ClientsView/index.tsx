@@ -10,7 +10,7 @@ const clientsData = [
     email: 'teste1234@gmail.com',
     points: '20',
     numberOfVisits: '2',
-    createdAt: '21/04/2020',
+    createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const clientsData = [
     email: 'teste1234@gmail.com',
     points: '10',
     numberOfVisits: '22',
-    createdAt: '22/04/2020',
+    createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const clientsData = [
     email: 'teste1234@gmail.com',
     points: '20',
     numberOfVisits: '42',
-    createdAt: '23/04/2020',
+    createdAt: /*new Date(1996, 4, 23)*/ new Date('2014-08-18T21:11:54'),
   },
 ];
 interface HeadCell {
@@ -36,6 +36,8 @@ interface HeadCell {
   id: string;
   label: string;
   numeric: boolean;
+  type: string;
+  isEditable: boolean;
 }
 const headCells: HeadCell[] = [
   {
@@ -43,33 +45,60 @@ const headCells: HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Primeiro nome',
+    type: 'text',
+    isEditable: true,
   },
   {
     id: 'lastName',
     numeric: false,
     disablePadding: false,
     label: 'Ultimo nome',
+    type: 'text',
+    isEditable: true,
   },
-  { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-  { id: 'points', numeric: true, disablePadding: false, label: 'Pontos' },
+  {
+    id: 'email',
+    numeric: false,
+    disablePadding: false,
+    label: 'Email',
+    type: 'email',
+    isEditable: true,
+  },
+  {
+    id: 'points',
+    numeric: true,
+    disablePadding: false,
+    label: 'Pontos',
+    type: 'number',
+    isEditable: true,
+  },
   {
     id: 'numberOfVisits',
     numeric: true,
     disablePadding: false,
     label: 'Numbero de visitas',
+    type: 'number',
+    isEditable: false,
   },
   {
     id: 'createdAt',
     numeric: false,
     disablePadding: false,
     label: 'Criado em',
+    type: 'date',
+    isEditable: false,
   },
 ];
 
 const ClientsView = () => {
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable data={clientsData} fields={headCells} actions={true} />
+      <ResponsiveTable
+        data={clientsData}
+        fields={headCells}
+        actions={true}
+        title={'Cliente'}
+      />
     </ResponsiveDrawer>
   );
 };
