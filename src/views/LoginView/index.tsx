@@ -64,17 +64,19 @@ const LoginView = () => {
   };
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}>
+      <h1 style={{ textAlign: 'center' }}>Fidelitas</h1>
       <form
-        style={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          alignContent: 'center',
-        }}
-        onSubmit={onSubmit}>
+        onSubmit={onSubmit}
+        style={{ display: 'flex', flexDirection: 'column' }}>
         <TextField
           id="filled-password-input"
           label="Email"
