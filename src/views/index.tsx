@@ -5,6 +5,8 @@ import ClientsView from './ClientsView';
 import DiscountsView from './DiscountsView';
 import ReservesView from './ReservesView';
 import PointsView from './PointsView';
+import GeneralInformationView from './GeneralInformationView';
+import NotificationsView from './NotificationsView';
 
 export default function App() {
   return (
@@ -15,6 +17,11 @@ export default function App() {
         <Route path={'/discounts'} component={DiscountsView} />
         <Route path={'/reserves'} component={ReservesView} />
         <Route path={'/points'} component={PointsView} />
+        <Route
+          path={'/generalInformations'}
+          component={GeneralInformationView}
+        />
+        <Route path={'/notifications'} component={NotificationsView} />
       </Switch>
     </Router>
   );

@@ -64,6 +64,8 @@ const translations: any = {
   discounts: 'Descontos',
   reserves: 'Reservas',
   points: 'Sistema de Pontuação',
+  generalInformations: 'Informações Gerais',
+  notifications: 'Notificações',
 };
 
 type Props = {
@@ -94,6 +96,12 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Sistema de Pontuação':
         history.push('/points');
         break;
+      case 'Informações Gerais':
+        history.push('/generalInformations');
+        break;
+      case 'Notificações':
+        history.push('/notifications');
+        break;
       default:
         history.push('/clients');
     }
@@ -111,19 +119,21 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       </div>
       <Divider />
       <List>
-        {['Clientes', 'Descontos', 'Reservas', 'Sistema de Pontuação'].map(
-          (text, index) => (
-            <ListItem
-              button
-              key={text}
-              onClick={() => handleDrawerOption(text)}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ),
-        )}
+        {[
+          'Clientes',
+          'Descontos',
+          'Reservas',
+          'Sistema de Pontuação',
+          'Informações Gerais',
+          'Notificações',
+        ].map((text, index) => (
+          <ListItem button key={text} onClick={() => handleDrawerOption(text)}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
       </List>
     </div>
   );
