@@ -77,6 +77,7 @@ const NotificationsView = () => {
         fields={headCells}
         actions={true}
         title={'Notificação'}
+        notifications={true}
       />
     </ResponsiveDrawer>
   );

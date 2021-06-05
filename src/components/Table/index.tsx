@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import SendIcon from '@material-ui/icons/Send';
 import CreateUpdateModal from '../CreateUpdateModal';
 import { format } from 'date-fns';
 
@@ -150,6 +151,7 @@ type Props = {
   fields: any;
   actions?: boolean;
   title?: string;
+  notifications?: boolean;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
@@ -157,6 +159,7 @@ const ResponsiveTable: React.FC<Props> = ({
   fields,
   actions = false,
   title,
+  notifications = false,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -272,6 +275,11 @@ const ResponsiveTable: React.FC<Props> = ({
                       )}
                       {actions && (
                         <TableCell align={'left'}>
+                          {notifications && (
+                            <IconButton aria-label="send">
+                              <SendIcon />{' '}
+                            </IconButton>
+                          )}
                           <IconButton
                             aria-label="edit"
                             onClick={() => handleModal(d)}>

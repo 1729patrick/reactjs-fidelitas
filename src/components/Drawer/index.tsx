@@ -102,6 +102,7 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Notificações':
         history.push('/notifications');
         break;
+
       default:
         history.push('/clients');
     }
