@@ -76,6 +76,7 @@ const ReservesView = () => {
         fields={headCells}
         actions={true}
         title={'Reserva'}
+        reserve={true}
       />
     </ResponsiveDrawer>
   );

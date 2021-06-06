@@ -13,6 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import SendIcon from '@material-ui/icons/Send';
+import SettingsIcon from '@material-ui/icons/Settings';
 import CreateUpdateModal from '../CreateUpdateModal';
 import { format } from 'date-fns';
 
@@ -152,6 +153,7 @@ type Props = {
   actions?: boolean;
   title?: string;
   notifications?: boolean;
+  reserve?: boolean;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
@@ -160,6 +162,7 @@ const ResponsiveTable: React.FC<Props> = ({
   actions = false,
   title,
   notifications = false,
+  reserve = false,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -234,6 +237,11 @@ const ResponsiveTable: React.FC<Props> = ({
             onClick={handleModal}>
             Adicionar {title}
           </Button>
+          {reserve && (
+            <IconButton aria-label="config">
+              <SettingsIcon />{' '}
+            </IconButton>
+          )}
         </div>
         <TableContainer>
           <Table
