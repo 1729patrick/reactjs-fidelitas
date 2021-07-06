@@ -10,9 +10,11 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  TextField,
 } from '@material-ui/core';
 import {
   KeyboardDatePicker,
+  KeyboardTimePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -66,18 +68,22 @@ const CreateUpdateModal: React.FC<Props> = ({
     dataRef.current,
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>();
+  const [selectedTime, setSelectedTime] = useState<Date | null>();
   /**
    * TO handle the data
    */
   useEffect(() => {
-    console.log(dataRef);
     if (dataRef) {
-      setSelectedDate(dataRef.current.expirationDate);
+      setSelectedDate(dataRef.current[0]);
     }
   }, []);
 
   const handleChangeDate = (date: Date | null) => {
+    console.log('hgigyg');
     setSelectedDate(date);
+  };
+  const handleChangeTime = (time: Date | null) => {
+    setSelectedTime(time);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +98,9 @@ const CreateUpdateModal: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  console.log(selectedTime);
+  console.log(selectedDate);
+  console.log(dataRef.current);
   return (
     <Modal
       open={open}
@@ -148,23 +157,39 @@ const CreateUpdateModal: React.FC<Props> = ({
                 </FormControl>
               );
             }
-            if (field.isEditable && field.type === 'date') {
+            if (
+              field.isEditable &&
+              (field.type === 'date' || field.type === 'time')
+            ) {
               return (
                 <FormControl
                   className={clsx(classes.margin, classes.textField)}
                   key={index}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                      margin="normal"
-                      id={field.id}
-                      label={field.label}
-                      format="dd/MM/yyyy"
-                      value={selectedDate}
-                      onChange={handleChangeDate}
-                      KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                      }}
-                    />
+                    {field.type == 'date' ? (
+                      <KeyboardDatePicker
+                        margin="normal"
+                        id={field.id}
+                        label={field.label}
+                        format="dd/MM/yyyy"
+                        value={selectedDate}
+                        onChange={handleChangeDate}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                      />
+                    ) : (
+                      <KeyboardTimePicker
+                        margin="normal"
+                        id={field.id}
+                        label={field.label}
+                        value={selectedTime}
+                        onChange={handleChangeTime}
+                        KeyboardButtonProps={{
+                          'aria-label': 'change time',
+                        }}
+                      />
+                    )}
                   </MuiPickersUtilsProvider>
                 </FormControl>
               );

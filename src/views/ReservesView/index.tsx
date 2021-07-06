@@ -6,22 +6,22 @@ const reservesData = [
   {
     id: 1,
     name: 20,
-    hours: 0,
-    date: 50,
+    hours: new Date('2014-08-18T21:12:54'),
+    date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 2,
     name: 10,
-    hours: 51,
-    date: 120,
+    hours: new Date('2014-08-18T21:11:54').toLocaleTimeString().substring(0, 5),
+    date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 3,
     name: 30,
-    hours: 121,
-    date: 1000,
+    hours: new Date('2014-08-18T20:11:54'),
+    date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
   },
 ];
@@ -48,7 +48,7 @@ const headCells: HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: 'Horas',
-    type: 'number',
+    type: 'time',
     isEditable: true,
   },
   {

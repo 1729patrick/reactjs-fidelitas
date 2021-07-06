@@ -19,6 +19,7 @@ import { format } from 'date-fns';
 
 import Paper from '@material-ui/core/Paper';
 import { Button } from '@material-ui/core';
+import ConfigModal from '../ConfigModal';
 
 interface Data {
   calories: number;
@@ -168,6 +169,7 @@ const ResponsiveTable: React.FC<Props> = ({
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
   const [openModal, setOpenModal] = useState(false);
+  const [openConfigModal, setOpenConfigModal] = useState(false);
 
   const [page, setPage] = React.useState(0);
 
@@ -221,6 +223,12 @@ const ResponsiveTable: React.FC<Props> = ({
     setOpenModal(!openModal);
   };
 
+  const handleConfigModal = (data?: any) => {
+    //useRef para transportar dados se existirem para dentro dos fields do modal
+
+    setOpenConfigModal(!openConfigModal);
+  };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -238,7 +246,7 @@ const ResponsiveTable: React.FC<Props> = ({
             Adicionar {title}
           </Button>
           {reserve && (
-            <IconButton aria-label="config">
+            <IconButton aria-label="config" onClick={handleConfigModal}>
               <SettingsIcon />{' '}
             </IconButton>
           )}
@@ -266,6 +274,8 @@ const ResponsiveTable: React.FC<Props> = ({
                 dataRef={modalDataRef}
               />
             )}
+
+            {openConfigModal && <ConfigModal />}
 
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
