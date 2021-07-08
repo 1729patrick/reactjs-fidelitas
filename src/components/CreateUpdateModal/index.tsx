@@ -79,7 +79,6 @@ const CreateUpdateModal: React.FC<Props> = ({
   }, []);
 
   const handleChangeDate = (date: Date | null) => {
-    console.log('hgigyg');
     setSelectedDate(date);
   };
   const handleChangeTime = (time: Date | null) => {
@@ -87,7 +86,6 @@ const CreateUpdateModal: React.FC<Props> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setFormControl({
       ...formControl,
       [event.target.name]: event.target.value,
@@ -98,9 +96,6 @@ const CreateUpdateModal: React.FC<Props> = ({
     event.preventDefault();
   };
 
-  console.log(selectedTime);
-  console.log(selectedDate);
-  console.log(dataRef.current);
   return (
     <Modal
       open={open}

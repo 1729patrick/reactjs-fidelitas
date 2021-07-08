@@ -45,7 +45,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const ConfigModal = () => {
+type Props = {
+  handleCloseModal: () => void;
+};
+
+const ConfigModal: React.FC<Props> = ({ handleCloseModal }) => {
   const classes = useStyles();
 
   /* const [formControl, setFormControl] = useState<{ [key: string]: any }>(
@@ -81,7 +85,7 @@ const ConfigModal = () => {
   return (
     <Modal
       open={true}
-      // onClose={() => handleCloseModal()}
+      onClose={() => handleCloseModal()}
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description">
       <div className={classes.paper}>

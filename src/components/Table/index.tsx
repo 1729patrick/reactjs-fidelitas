@@ -275,7 +275,9 @@ const ResponsiveTable: React.FC<Props> = ({
               />
             )}
 
-            {openConfigModal && <ConfigModal />}
+            {openConfigModal && (
+              <ConfigModal handleCloseModal={handleConfigModal} />
+            )}
 
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
