@@ -255,7 +255,8 @@ const ResponsiveTable: React.FC<Props> = ({
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            aria-label="enhanced table">
+            aria-label="enhanced table"
+            size={'small'}>
             <EnhancedTableHead
               classes={classes}
               order={order}
@@ -274,11 +275,9 @@ const ResponsiveTable: React.FC<Props> = ({
                 dataRef={modalDataRef}
               />
             )}
-
             {openConfigModal && (
               <ConfigModal handleCloseModal={handleConfigModal} />
             )}
-
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
