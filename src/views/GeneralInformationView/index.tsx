@@ -47,40 +47,78 @@ const GeneralInformationView = () => {
     <ResponsiveDrawer>
       <div>
         <Card raised={true}>
-          <h2>Informação Geral</h2>
+          <h2
+            style={{
+              paddingLeft: '20px',
+            }}>
+            Informação Geral
+          </h2>
           <form>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <FormControl
-                  className={clsx(classes.margin, classes.textField)}>
-                  <InputLabel htmlFor={'name'}>Nome do restaurante</InputLabel>
-                  <Input
-                    id={'name'}
-                    type={'text'}
-                    //value={}
-                    name={'name'}
-                    //onChange={}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        {/*<IconButton
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                padding: '0px 20px',
+              }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <FormControl
+                    className={clsx(classes.margin, classes.textField)}>
+                    <InputLabel htmlFor={'name'}>
+                      Nome do restaurante
+                    </InputLabel>
+                    <Input
+                      id={'name'}
+                      type={'text'}
+                      //value={}
+                      name={'name'}
+                      //onChange={}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          {/*<IconButton
                               aria-label="toggle password visibility"
                               onClick={handleClickShowPassword}
                               onMouseDown={handleMouseDownPassword}>
                               {showPassword ? <Visibility/> : <VisibilityOff/>}
                           </IconButton> */}
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
 
+                  <FormControl
+                    className={clsx(classes.margin, classes.textField)}>
+                    <InputLabel htmlFor={'phone'}>Contacto</InputLabel>
+                    <Input
+                      id={'phone'}
+                      type={'number'}
+                      //value={}
+                      name={'phone'}
+                      //onChange={}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          {/*<IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}>
+                              {showPassword ? <Visibility/> : <VisibilityOff/>}
+                          </IconButton> */}
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </div>
                 <FormControl
-                  className={clsx(classes.margin, classes.textField)}>
-                  <InputLabel htmlFor={'phone'}>Contacto</InputLabel>
+                  className={clsx(classes.margin, classes.addressField)}>
+                  <InputLabel htmlFor={'localization'}>
+                    Localização do restaurante
+                  </InputLabel>
                   <Input
-                    id={'phone'}
-                    type={'number'}
+                    id={'localization'}
+                    type={'text'}
                     //value={}
-                    name={'phone'}
+                    name={'localization'}
                     //onChange={}
                     endAdornment={
                       <InputAdornment position="end">
@@ -95,29 +133,28 @@ const GeneralInformationView = () => {
                   />
                 </FormControl>
               </div>
-              <FormControl
-                className={clsx(classes.margin, classes.addressField)}>
-                <InputLabel htmlFor={'localization'}>
-                  Localização do restaurante
-                </InputLabel>
-                <Input
-                  id={'localization'}
-                  type={'text'}
-                  //value={}
-                  name={'localization'}
-                  //onChange={}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      {/*<IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}>
-                              {showPassword ? <Visibility/> : <VisibilityOff/>}
-                          </IconButton> */}
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
+              <div
+                style={{
+                  position: 'relative',
+                  bottom: '30px',
+                  //right: '150px',
+                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}>
+                  <h3>QR Code da aplicação</h3>
+                  <img
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                    }}
+                    src={'https://miro.medium.com/max/1280/0*zPG9dqz508rmRR70.'}
+                  />
+                </div>
+              </div>
             </div>
           </form>
         </Card>
