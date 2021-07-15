@@ -239,7 +239,10 @@ const ResponsiveTable: React.FC<Props> = ({
             justifyContent: 'flex-end',
           }}>
           <Button
-            style={{ marginTop: '10px', marginRight: '10px' }}
+            style={{
+              marginTop: '10px',
+              marginRight: '10px',
+            }}
             variant="contained"
             startIcon={<AddCircleIcon />}
             onClick={handleModal}>
@@ -295,17 +298,22 @@ const ResponsiveTable: React.FC<Props> = ({
                       {actions && (
                         <TableCell align={'left'}>
                           {notifications && (
-                            <IconButton aria-label="send">
-                              <SendIcon />{' '}
+                            <IconButton
+                              aria-label="send"
+                              style={{ marginLeft: '-28px' }}>
+                              <SendIcon />
                             </IconButton>
                           )}
                           <IconButton
                             aria-label="edit"
-                            onClick={() => handleModal(d)}>
-                            <EditIcon />{' '}
+                            onClick={() => handleModal(d)}
+                            style={
+                              !notifications ? { marginLeft: '-28px' } : {}
+                            }>
+                            <EditIcon />
                           </IconButton>
                           <IconButton aria-label="delete">
-                            <DeleteIcon />{' '}
+                            <DeleteIcon />
                           </IconButton>
                         </TableCell>
                       )}

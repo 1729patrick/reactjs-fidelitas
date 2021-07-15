@@ -15,6 +15,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {
+  Restaurant,
+  PeopleAlt,
+  Loyalty,
+  Schedule,
+  Star,
+  NotificationsActive,
+} from '@material-ui/icons';
+import {
   makeStyles,
   useTheme,
   Theme,
@@ -103,9 +111,27 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Notificações':
         history.push('/notifications');
         break;
-
       default:
         history.push('/clients');
+    }
+  };
+
+  const drawerIcon = (index: number) => {
+    switch (index) {
+      case 0:
+        return <Restaurant />;
+      case 1:
+        return <PeopleAlt />;
+      case 2:
+        return <Loyalty />;
+      case 3:
+        return <Schedule />;
+      case 4:
+        return <Star />;
+      case 5:
+        return <NotificationsActive />;
+      default:
+        return '';
     }
   };
 
@@ -122,17 +148,15 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       <Divider />
       <List>
         {[
+          'Informações Gerais',
           'Clientes',
           'Descontos',
           'Reservas',
           'Sistema de Pontuação',
-          'Informações Gerais',
           'Notificações',
         ].map((text, index) => (
           <ListItem button key={text} onClick={() => handleDrawerOption(text)}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
+            <ListItemIcon>{drawerIcon(index)}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
