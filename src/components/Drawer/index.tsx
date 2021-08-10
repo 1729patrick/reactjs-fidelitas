@@ -12,6 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
+import InfoIcon from '@material-ui/icons/Info';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {
@@ -22,6 +23,8 @@ import {
   Star,
   NotificationsActive,
 } from '@material-ui/icons';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 import {
   makeStyles,
   useTheme,
@@ -70,6 +73,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const translations: any = {
   clients: 'Clientes',
+  // menu: 'Ementa',
+  products: 'Produtos',
   discounts: 'Descontos',
   reserves: 'Reservas',
   points: 'Sistema de Pontuação',
@@ -96,6 +101,12 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Clientes':
         history.push('/clients');
         break;
+      /* case 'Ementa':
+        history.push('/menu');
+        break;*/
+      case 'Produtos':
+        history.push('/products');
+        break;
       case 'Descontos':
         history.push('/discounts');
         break;
@@ -119,15 +130,15 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
   const drawerIcon = (index: number) => {
     switch (index) {
       case 0:
-        return <Restaurant />;
+        return <InfoIcon />;
       case 1:
-        return <PeopleAlt />;
+        return <Restaurant />;
       case 2:
-        return <Loyalty />;
+        return <PeopleAlt />;
       case 3:
-        return <Schedule />;
+        return <Loyalty />;
       case 4:
-        return <Star />;
+        return <Schedule />;
       case 5:
         return <NotificationsActive />;
       default:
@@ -149,10 +160,12 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       <List>
         {[
           'Informações Gerais',
+          // 'Ementa',
+          'Produtos',
           'Clientes',
           'Descontos',
           'Reservas',
-          'Sistema de Pontuação',
+          //  'Sistema de Pontuação',
           'Notificações',
         ].map((text, index) => (
           <ListItem button key={text} onClick={() => handleDrawerOption(text)}>
@@ -168,18 +181,30 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            {translations[location.pathname.substring(1)]}
-          </Typography>
+        <Toolbar
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <div>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              {translations[location.pathname.substring(1)]}
+            </Typography>
+          </div>
+          <div>
+            <IconButton>
+              <AccountCircleIcon style={{ color: 'black', fontSize: 30 }} />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">

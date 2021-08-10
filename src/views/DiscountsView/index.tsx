@@ -5,7 +5,9 @@ import ResponsiveTable from '../../components/Table';
 const discountsData = [
   {
     id: 1,
-    description: 'Almoço 20% desconto',
+    title: 'Title',
+    description: 'Description lorem ipsum',
+    trophy: 'Almoço 20% desconto',
     costPoints: 0,
     costVisits: 3,
     isActive: true,
@@ -14,7 +16,9 @@ const discountsData = [
   },
   {
     id: 2,
-    description: 'Jantar oferta de 1 bebida n/alcoólica',
+    title: 'Title',
+    description: 'Description lorem ipsum',
+    trophy: 'Jantar oferta de 1 bebida n/alcoólica',
     costPoints: 50,
     costVisits: 1,
     isActive: false,
@@ -23,7 +27,9 @@ const discountsData = [
   },
   {
     id: 3,
-    description: 'Oferta de um jantar',
+    title: 'Title',
+    description: 'Description lorem ipsum',
+    trophy: 'Oferta de um jantar',
     costPoints: 500,
     costVisits: 0,
     isActive: true,
@@ -41,10 +47,26 @@ interface HeadCell {
 }
 const headCells: HeadCell[] = [
   {
+    id: 'title',
+    numeric: false,
+    disablePadding: false,
+    label: 'Título',
+    type: 'text',
+    isEditable: true,
+  },
+  {
     id: 'description',
     numeric: false,
     disablePadding: false,
     label: 'Descrição',
+    type: 'text',
+    isEditable: true,
+  },
+  {
+    id: 'trophy',
+    numeric: false,
+    disablePadding: false,
+    label: 'Prémio',
     type: 'text',
     isEditable: true,
   },

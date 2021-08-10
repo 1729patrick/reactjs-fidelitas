@@ -10,13 +10,13 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  TextField,
 } from '@material-ui/core';
 import {
   KeyboardDatePicker,
   KeyboardTimePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
-      top: '20%',
-      left: '20%',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%,-50%)',
     },
     root: {
       display: 'flex',
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     textField: {
-      width: '25ch',
+      width: '40ch',
     },
   }),
 );
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   open?: boolean;
   handleCloseModal: () => void;
-  fields: [];
+  fields: any;
   title?: string;
   dataRef?: any;
 };
@@ -65,7 +66,7 @@ const CreateUpdateModal: React.FC<Props> = ({
   const classes = useStyles();
 
   const [formControl, setFormControl] = useState<{ [key: string]: any }>(
-    dataRef.current,
+    dataRef?.current,
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>();
   const [selectedTime, setSelectedTime] = useState<Date | null>();
@@ -120,7 +121,7 @@ const CreateUpdateModal: React.FC<Props> = ({
           </IconButton>
         </div>
         <form onSubmit={handleSubmit}>
-          {fields.map((field: any, index) => {
+          {fields.map((field: any, index: number) => {
             if (
               field.isEditable &&
               (field.type === 'text' ||
@@ -187,6 +188,43 @@ const CreateUpdateModal: React.FC<Props> = ({
                     )}
                   </MuiPickersUtilsProvider>
                 </FormControl>
+              );
+            }
+            if (field.isEditable && field.type === 'file') {
+              return (
+                <>
+                  <InputLabel
+                    style={{
+                      color: '0,0,0,0.54',
+                      paddingLeft: 8,
+                      fontSize: '0.8rem',
+                      fontFamily: 'Helvetica',
+                      fontWeight: 400,
+                      lineHeight: 1,
+                      letterSpacing: '0.00938em',
+                    }}
+                    htmlFor={field.id}>
+                    Imagem
+                  </InputLabel>
+                  <FormControl
+                    className={clsx(classes.margin, classes.textField)}
+                    key={index}>
+                    <img
+                      src={formControl[field.id]}
+                      style={{ width: 50, height: 50 }}
+                    />
+                    <InputLabel htmlFor={field.id}>
+                      <AddPhotoAlternateIcon />
+                    </InputLabel>
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      name={field.id}
+                      onChange={handleChange}
+                      style={{ display: 'none' }}
+                    />
+                  </FormControl>
+                </>
               );
             }
           })}

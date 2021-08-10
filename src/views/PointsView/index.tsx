@@ -94,12 +94,17 @@ const headCells: HeadCell[] = [
 const PointsView = () => {
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={systemPointsData}
-        fields={headCells}
-        actions={true}
-        title={'Pontuação'}
-      />
+      <div>
+        <h2>Pontos por preço</h2>
+        <ResponsiveTable
+          data={systemPointsData}
+          fields={headCells}
+          actions={true}
+          title={'Pontuação'}
+        />
+        <h2>Pontos por recomendação</h2>
+        <h2>Pontos por visitas</h2>
+      </div>
     </ResponsiveDrawer>
   );
 };

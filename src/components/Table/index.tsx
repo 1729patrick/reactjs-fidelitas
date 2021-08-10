@@ -209,6 +209,8 @@ const ResponsiveTable: React.FC<Props> = ({
       return booleanToString(value);
     } else if (type === 'object') {
       return format(value, 'yyyy/MM/dd');
+    } else if (type === 'string' && value.includes('base64')) {
+      return <img src={value} style={{ width: 50, height: 50 }} />;
     } else {
       return value;
     }
@@ -237,20 +239,23 @@ const ResponsiveTable: React.FC<Props> = ({
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-end',
+            alignItems: 'center',
+            paddingRight: '10px',
           }}>
-          <Button
-            style={{
-              marginTop: '10px',
-              marginRight: '10px',
-            }}
-            variant="contained"
-            startIcon={<AddCircleIcon />}
-            onClick={handleModal}>
-            Adicionar {title}
-          </Button>
+          {actions && (
+            <Button
+              style={{
+                marginRight: '10px',
+              }}
+              variant="contained"
+              startIcon={<AddCircleIcon />}
+              onClick={handleModal}>
+              Adicionar {title}
+            </Button>
+          )}
           {reserve && (
             <IconButton aria-label="config" onClick={handleConfigModal}>
-              <SettingsIcon />{' '}
+              <SettingsIcon />
             </IconButton>
           )}
         </div>
