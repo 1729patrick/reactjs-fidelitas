@@ -1,54 +1,32 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import LoginView from './LoginView';
+import ClientsView from './ClientsView';
+import DiscountsView from './DiscountsView';
+import ReservesView from './ReservesView';
+import PointsView from './PointsView';
+import GeneralInformationView from './GeneralInformationView';
+import NotificationsView from './NotificationsView';
+import MenuView from './MenuView';
+import ProductsView from './ProductsView';
 
 export default function App() {
-    return (
-        <Router>
-            <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/about">About</Link>
-                        </li>
-                        <li>
-                            <Link to="/users">Users</Link>
-                        </li>
-                    </ul>
-                </nav>
-
-                {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-                <Switch>
-                    <Route path="/about">
-                        <About/>
-                    </Route>
-                    <Route path="/users">
-                        <Users/>
-                    </Route>
-                    <Route path="/">
-                        <Home/>
-                    </Route>
-                </Switch>
-            </div>
-        </Router>
-    );
-}
-
-function Home() {
-    return <h2>Home</h2>;
-}
-
-function About() {
-    return <h2>About</h2>;
-}
-
-function Users() {
-    return <h2>Users</h2>;
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" component={LoginView} />
+        <Route path={'/clients'} component={ClientsView} />
+        <Route path={'/products'} component={ProductsView} />
+        <Route path={'/menu'} component={MenuView} />
+        <Route path={'/discounts'} component={DiscountsView} />
+        <Route path={'/reserves'} component={ReservesView} />
+        <Route path={'/points'} component={PointsView} />
+        <Route
+          path={'/generalInformations'}
+          component={GeneralInformationView}
+        />
+        <Route path={'/notifications'} component={NotificationsView} />
+      </Switch>
+    </Router>
+  );
 }
