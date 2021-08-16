@@ -32,6 +32,7 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
+import { Menu, MenuItem } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -50,8 +51,11 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
-        backgroundColor: 'green',
+        backgroundColor: 'white',
+        color: 'black',
       },
+      backgroundColor: 'white',
+      color: 'black',
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -63,10 +67,18 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
+      background: '#4958EE',
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
+    },
+    listItem: {
+      borderRadius: '20px',
+
+      '&:hover': {
+        backgroundColor: 'white',
+      },
     },
   }),
 );
@@ -90,10 +102,27 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
   const location = useLocation();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSettings = () => {
+    history.push('/generalInformations');
+  };
+
+  const handleLogin = () => {
+    history.push('/');
   };
 
   const handleDrawerOption = (val: string) => {
@@ -156,7 +185,6 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
         }}>
         <h1>FIDELITAS</h1>
       </div>
-      <Divider />
       <List>
         {[
           'Informações Gerais',
@@ -168,7 +196,11 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
           //  'Sistema de Pontuação',
           'Notificações',
         ].map((text, index) => (
-          <ListItem button key={text} onClick={() => handleDrawerOption(text)}>
+          <ListItem
+            button
+            key={text}
+            onClick={() => handleDrawerOption(text)}
+            className={classes.listItem}>
             <ListItemIcon>{drawerIcon(index)}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -201,9 +233,31 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
             </Typography>
           </div>
           <div>
-            <IconButton>
+            <IconButton
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleClick}>
               <AccountCircleIcon style={{ color: 'black', fontSize: 30 }} />
             </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              elevation={0}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}>
+              <MenuItem onClick={handleSettings}>Configurações</MenuItem>
+              <MenuItem onClick={handleLogin}>Terminar Sessão</MenuItem>
+            </Menu>
           </div>
         </Toolbar>
       </AppBar>
