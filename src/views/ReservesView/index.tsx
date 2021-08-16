@@ -6,6 +6,7 @@ const reservesData = [
   {
     id: 1,
     name: 20,
+    numberOfPersons: 3,
     hours: new Date('2014-08-18T21:12:54'),
     date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
@@ -13,6 +14,7 @@ const reservesData = [
   {
     id: 2,
     name: 10,
+    numberOfPersons: 3,
     hours: new Date('2014-08-18T21:11:54').toLocaleTimeString().substring(0, 5),
     date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
@@ -20,6 +22,7 @@ const reservesData = [
   {
     id: 3,
     name: 30,
+    numberOfPersons: 3,
     hours: new Date('2014-08-18T20:11:54'),
     date: new Date('2014-08-18T21:11:54'),
     createdAt: new Date('2014-08-18T21:11:54'),
@@ -37,9 +40,17 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   {
     id: 'name',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Nome',
+    type: 'text',
+    isEditable: true,
+  },
+  {
+    id: 'numberOfPersons',
+    numeric: true,
+    disablePadding: false,
+    label: 'Nº de Pessoas',
     type: 'text',
     isEditable: true,
   },
