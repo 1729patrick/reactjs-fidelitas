@@ -32,7 +32,8 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, MenuProps, withStyles } from '@material-ui/core';
+import { Palette } from '../../utils/palette';
 
 const drawerWidth = 240;
 
@@ -67,17 +68,27 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-      background: '#4958EE',
+      background: Palette.primaryBackgroundColor,
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
     },
     listItem: {
-      borderRadius: '20px',
-
+      borderRadius: '0px 20px 20px 0px',
+      '& > *': {
+        color: Palette.primaryTextColor,
+      },
       '&:hover': {
         backgroundColor: 'white',
+        '& > *': {
+          color: 'black',
+        },
+      },
+    },
+    menuProfile: {
+      '& > *': {
+        border: '1px solid black',
       },
     },
   }),
@@ -145,8 +156,8 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Sistema de Pontuação':
         history.push('/points');
         break;
-      case 'Informações Gerais':
-        history.push('/generalInformations');
+      case 'Dashboard':
+        history.push('/dashboard');
         break;
       case 'Notificações':
         history.push('/notifications');
@@ -183,11 +194,11 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <h1>FIDELITAS</h1>
+        <h1 style={{ color: 'white' }}>FIDELITAS</h1>
       </div>
       <List>
         {[
-          'Informações Gerais',
+          'Dashboard',
           // 'Ementa',
           'Produtos',
           'Clientes',
@@ -209,10 +220,31 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
     </div>
   );
 
+  const StyledMenu = withStyles({
+    paper: {
+      border: '1px solid #d3d4d5',
+    },
+  })((props: MenuProps) => (
+    <Menu
+      elevation={0}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      keepMounted
+      {...props}
+    />
+  ));
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} elevation={0}>
         <Toolbar
           style={{
             display: 'flex',
@@ -237,27 +269,18 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
               aria-controls="simple-menu"
               aria-haspopup="true"
               onClick={handleClick}>
-              <AccountCircleIcon style={{ color: 'black', fontSize: 30 }} />
+              <AccountCircleIcon
+                style={{ color: Palette.primaryBackgroundColor, fontSize: 30 }}
+              />
             </IconButton>
-            <Menu
+            <StyledMenu
               id="simple-menu"
               anchorEl={anchorEl}
-              elevation={0}
-              getContentAnchorEl={null}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-              keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
               <MenuItem onClick={handleSettings}>Configurações</MenuItem>
               <MenuItem onClick={handleLogin}>Terminar Sessão</MenuItem>
-            </Menu>
+            </StyledMenu>
           </div>
         </Toolbar>
       </AppBar>

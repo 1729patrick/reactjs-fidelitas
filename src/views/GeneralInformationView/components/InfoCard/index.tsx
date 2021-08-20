@@ -14,13 +14,8 @@ import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { Palette } from '../../../../utils/palette';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -73,9 +68,13 @@ const InfoCard = () => {
           style={{
             marginRight: '10px',
             height: '90%',
+            backgroundColor: Palette.primaryBackgroundColor,
+            color: Palette.primaryTextColor,
           }}
           variant="contained"
-          startIcon={<AddCircleIcon />}
+          startIcon={
+            <AddCircleIcon style={{ color: Palette.primaryTextColor }} />
+          }
           onClick={() => {
             handleCloseModal();
           }}>

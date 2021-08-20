@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
-import CollapsibleTable from '../ProductsView/components/CollapseTable';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
-import ResponsiveTable from '../../components/Table';
+
 import Menu from './components/Menu';
-import CreateUpdateModal from '../../components/CreateUpdateModal';
+
 const vegetarianProductData = [
   {
     id: 1,
@@ -129,23 +126,6 @@ const MenuView = () => {
         {menus.map((menu, index) => (
           <React.Fragment key={index}>{menu}</React.Fragment>
         ))}
-        {/*openModal && (
-          <CreateUpdateModal
-            open={openModal}
-            handleCloseModal={handleModal}
-            fields={[
-              {
-                id: 'name',
-                numeric: false,
-                disablePadding: false,
-                label: 'Nome',
-                type: 'text',
-                isEditable: true,
-              },
-            ]}
-            title={'Adicionar Categoria'}
-          />
-        )*/}
       </div>
     </ResponsiveDrawer>
   );

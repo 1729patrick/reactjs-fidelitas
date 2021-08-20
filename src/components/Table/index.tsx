@@ -22,6 +22,8 @@ import Paper from '@material-ui/core/Paper';
 import { Button } from '@material-ui/core';
 import ConfigModal from '../ConfigModal';
 
+import { Palette } from '../../utils/palette';
+
 interface Data {
   calories: number;
   carbs: number;
@@ -242,11 +244,14 @@ const ResponsiveTable: React.FC<Props> = ({
             justifyContent: 'flex-end',
             alignItems: 'center',
             paddingRight: '10px',
+            paddingTop: '10px',
           }}>
           {actions && (
             <Button
               style={{
                 marginRight: '10px',
+                background: Palette.primaryBackgroundColor,
+                color: Palette.primaryTextColor,
               }}
               variant="contained"
               startIcon={<AddCircleIcon />}
@@ -256,7 +261,7 @@ const ResponsiveTable: React.FC<Props> = ({
           )}
           {reserve && (
             <IconButton aria-label="config" onClick={handleConfigModal}>
-              <SettingsIcon />
+              <SettingsIcon style={{ color: Palette.primaryBackgroundColor }} />
             </IconButton>
           )}
         </div>
