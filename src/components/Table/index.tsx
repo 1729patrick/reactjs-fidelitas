@@ -19,10 +19,11 @@ import CreateUpdateModal from '../CreateUpdateModal';
 import { format } from 'date-fns';
 
 import Paper from '@material-ui/core/Paper';
-import { Button } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import ConfigModal from '../ConfigModal';
 
 import { Palette } from '../../utils/palette';
+import { translations } from '../Drawer';
 
 interface Data {
   calories: number;
@@ -133,6 +134,8 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
+      boxShadow: "none",
+      borderRadius: 8,
     },
     table: {
       minWidth: 750,
@@ -236,6 +239,29 @@ const ResponsiveTable: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
+      <Box  display="flex"
+        mb={3}
+        mt={3}
+        justifyContent="space-between"
+      >
+
+      <Typography variant="h6">
+        {translations[location.pathname.substring(1)]}
+      </Typography>
+
+        {actions && (
+              <Button
+                style={{
+                  background: Palette.primaryBackgroundColor,
+                  color: Palette.primaryTextColor,
+                  boxShadow: "none",
+                }}
+                variant="contained"
+                onClick={handleModal}>
+                Adicionar {title}
+              </Button>
+            )}
+      </Box>
       <Paper className={classes.paper}>
         <div
           style={{
@@ -246,19 +272,6 @@ const ResponsiveTable: React.FC<Props> = ({
             paddingRight: '10px',
             paddingTop: '10px',
           }}>
-          {actions && (
-            <Button
-              style={{
-                marginRight: '10px',
-                background: Palette.primaryBackgroundColor,
-                color: Palette.primaryTextColor,
-              }}
-              variant="contained"
-              startIcon={<AddCircleIcon />}
-              onClick={handleModal}>
-              Adicionar {title}
-            </Button>
-          )}
           {reserve && (
             <IconButton aria-label="config" onClick={handleConfigModal}>
               <SettingsIcon style={{ color: Palette.primaryBackgroundColor }} />

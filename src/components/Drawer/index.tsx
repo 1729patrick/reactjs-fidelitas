@@ -24,6 +24,7 @@ import {
   NotificationsActive,
 } from '@material-ui/icons';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import {
   makeStyles,
@@ -32,8 +33,15 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Menu, MenuItem, MenuProps, withStyles } from '@material-ui/core';
+import {
+  Breadcrumbs,
+  Menu,
+  MenuItem,
+  MenuProps,
+  withStyles,
+} from '@material-ui/core';
 import { Palette } from '../../utils/palette';
+import Link from '@material-ui/core/Link';
 
 const drawerWidth = 240;
 
@@ -69,13 +77,15 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
       background: Palette.primaryBackgroundColor,
+      paddingRight: 20,
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
+      paddingTop: 64,
     },
     listItem: {
-      borderRadius: '0px 20px 20px 0px',
+      borderRadius: '0px 200px 200px 0px',
       '& > *': {
         color: Palette.primaryTextColor,
       },
@@ -94,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const translations: any = {
+export const translations: any = {
   clients: 'Clientes',
   // menu: 'Ementa',
   products: 'Produtos',
@@ -260,9 +270,16 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
               className={classes.menuButton}>
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
-              {translations[location.pathname.substring(1)]}
-            </Typography>
+            <Breadcrumbs
+              separator={<NavigateNextIcon fontSize="small" />}
+              aria-label="breadcrumb">
+              <Link color="inherit" href="/dashboard">
+                Dashboard
+              </Link>
+              <Link color="inherit" href={location.pathname.substring(1)}>
+                {translations[location.pathname.substring(1)]}
+              </Link>
+            </Breadcrumbs>
           </div>
           <div>
             <IconButton
@@ -312,10 +329,7 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
-      </main>
+      <main className={classes.content}>{children}</main>
     </div>
   );
 };
