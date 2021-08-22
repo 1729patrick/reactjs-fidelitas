@@ -5,8 +5,8 @@ import ResponsiveTable from '../../components/Table';
 const notificationData = [
   {
     id: 1,
-    title: '20 almoços gratis',
-    message: 'são para esquecer ',
+    title: '1 Sangria grátis com 3 hambúrgueres',
+    message: 'Venha jantar conosco ao sabor de uma bela sangria',
     color: 'red',
     createdAt: new Date('2014-08-18T21:11:54'),
   },

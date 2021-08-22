@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
-      boxShadow: "none",
+      boxShadow: 'none',
       borderRadius: 8,
     },
     table: {
@@ -239,28 +239,23 @@ const ResponsiveTable: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
-      <Box  display="flex"
-        mb={3}
-        mt={3}
-        justifyContent="space-between"
-      >
-
-      <Typography variant="h6">
-        {translations[location.pathname.substring(1)]}
-      </Typography>
+      <Box display="flex" mb={3} mt={3} justifyContent="space-between">
+        <Typography variant="h6">
+          {translations[location.pathname.substring(1)]}
+        </Typography>
 
         {actions && (
-              <Button
-                style={{
-                  background: Palette.primaryBackgroundColor,
-                  color: Palette.primaryTextColor,
-                  boxShadow: "none",
-                }}
-                variant="contained"
-                onClick={handleModal}>
-                Adicionar {title}
-              </Button>
-            )}
+          <Button
+            style={{
+              background: Palette.primaryBackgroundColor,
+              color: Palette.primaryTextColor,
+              boxShadow: 'none',
+            }}
+            variant="contained"
+            onClick={handleModal}>
+            Adicionar {title}
+          </Button>
+        )}
       </Box>
       <Paper className={classes.paper}>
         <div
@@ -321,24 +316,27 @@ const ResponsiveTable: React.FC<Props> = ({
                       )}
                       {actions && (
                         <TableCell align={'left'}>
-                          {notifications && (
+                          <div
+                            style={{ display: 'flex', flexDirection: 'row' }}>
+                            {notifications && (
+                              <IconButton
+                                aria-label="send"
+                                style={{ marginLeft: '-28px' }}>
+                                <SendIcon />
+                              </IconButton>
+                            )}
                             <IconButton
-                              aria-label="send"
-                              style={{ marginLeft: '-28px' }}>
-                              <SendIcon />
+                              aria-label="edit"
+                              onClick={() => handleModal(d)}
+                              style={
+                                !notifications ? { marginLeft: '-28px' } : {}
+                              }>
+                              <EditIcon />
                             </IconButton>
-                          )}
-                          <IconButton
-                            aria-label="edit"
-                            onClick={() => handleModal(d)}
-                            style={
-                              !notifications ? { marginLeft: '-28px' } : {}
-                            }>
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton aria-label="delete">
-                            <DeleteIcon />
-                          </IconButton>
+                            <IconButton aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </div>
                         </TableCell>
                       )}
                     </TableRow>

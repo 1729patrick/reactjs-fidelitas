@@ -10,6 +10,7 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  TextField,
 } from '@material-ui/core';
 import {
   KeyboardDatePicker,
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     textField: {
-      width: '40ch',
+      width: '30ch',
     },
   }),
 );
@@ -128,34 +129,57 @@ const CreateUpdateModal: React.FC<Props> = ({
                 field.type === 'checkbox')
             ) {
               return (
-                <FormControl
-                  className={clsx(classes.margin, classes.textField)}
-                  key={index}>
-                  <InputLabel htmlFor={field.id}>{field.label}</InputLabel>
-                  <Input
-                    id={field.id}
-                    type={field.type}
-                    value={formControl[field.id]}
-                    name={field.id}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        {/*<IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}>
-                              {showPassword ? <Visibility/> : <VisibilityOff/>}
-                          </IconButton> */}
+                <TextField
+                  key={index}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id={field.id}
+                  type={field.type}
+                  value={formControl[field.id]}
+                  name={field.id}
+                  onChange={handleChange}
+                  label={field.label}
+                  autoComplete={field.type}
+                  multiline
+                  autoFocus
+                />
+              );
+
+              /* Inputs !== text field
+                              return (
+                                <FormControl
+                                  className={clsx(classes.margin, classes.textField)}
+                                  key={index}>
+                                  <InputLabel htmlFor={field.id}>{field.label}</InputLabel>
+                                  <Input
+                                    id={field.id}
+                                    type={field.type}
+                                    value={formControl[field.id]}
+                                    name={field.id}
+                                    onChange={handleChange}
+                                    endAdornment={
+                                      <InputAdornment position="end">
+                                        {<IconButton
+                                              aria-label="toggle password visibility"
+                                              onClick={handleClickShowPassword}
+                                              onMouseDown={handleMouseDownPassword}>
+                                              {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                          </IconButton>
+            }}
                       </InputAdornment>
                     }
                   />
                 </FormControl>
               );
+            */
             }
             if (
               field.isEditable &&
               (field.type === 'date' || field.type === 'time')
             ) {
+              /*
               return (
                 <FormControl
                   className={clsx(classes.margin, classes.textField)}
@@ -188,6 +212,7 @@ const CreateUpdateModal: React.FC<Props> = ({
                   </MuiPickersUtilsProvider>
                 </FormControl>
               );
+            */
             }
             if (field.isEditable && field.type === 'file') {
               return (
