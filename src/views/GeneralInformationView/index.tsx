@@ -7,10 +7,48 @@ import {
   InputAdornment,
   InputLabel,
 } from '@material-ui/core';
-import InfoCard from './components/InfoCard';
+import RestaurantInfoCard from './components/RestaurantInfoCard';
+import UserInfoCard from './components/UserInfoCard';
 import clsx from 'clsx';
 // @ts-ignore
 import { BlockPicker } from 'react-color';
+
+const userDate = {
+  firstName: 'Patrick',
+  lastNanem: 'Forsthofer',
+  phone: 913060881,
+  email: 'patrickforsthofer@gmail.com',
+};
+
+const restaurantData = {
+  title: 'Flavours Spot',
+  description: 'Premium Burgers',
+  workHours: [
+    { monday: {} },
+    { tuesday: {} },
+    { wednesday: {} },
+    { thursday: {} },
+    { friday: {} },
+    { saturday: {} },
+    { sunday: {} },
+  ],
+  contacts: [
+    { contact: 'restaurant@gmail.com', type: 'email' },
+    { contact: 913060881, type: 'phone' },
+  ],
+  addresses: {
+    lat: 1111.33,
+    long: 1111.44,
+    address1: 'rua teste 123',
+    address2: 'Setúbal 2860-045',
+    postalCode: '2860-045',
+    city: 'Setúbal',
+    responsible: 'Bruno',
+    phone: 913060881,
+    notes: 'Notas teste 123',
+  },
+  facilities: ['wc', 'zona de fumadores', 'esplanada'],
+};
 
 const GeneralInformationView = () => {
   const [mainColor, setMainColor] = useState();
@@ -18,7 +56,8 @@ const GeneralInformationView = () => {
   return (
     <ResponsiveDrawer>
       <div>
-        <InfoCard />
+        <UserInfoCard />
+        <RestaurantInfoCard data={restaurantData} />
         <Card style={{ marginTop: '30px' }} raised={true}>
           <h2
             style={{

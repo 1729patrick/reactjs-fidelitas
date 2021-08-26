@@ -16,7 +16,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import { AccessTime, Euro, People } from '@material-ui/icons';
+import { AccessTime, Euro, People, Group } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     textField: {
-      width: '28ch',
+      width: '30ch',
     },
   }),
 );
@@ -124,7 +124,7 @@ const ConfigModal: React.FC<Props> = ({ handleCloseModal }) => {
               }}>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor={'minPersons'}>
-                  {'Nº mínimo de pessoas'}
+                  {'Nº mínimo de pessoas/reserva'}
                 </InputLabel>
                 <Input
                   id={'minPersons'}
@@ -144,7 +144,7 @@ const ConfigModal: React.FC<Props> = ({ handleCloseModal }) => {
 
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor={'maxPersons'}>
-                  {'Nº máximo de pessoas'}
+                  {'Nº máximo de pessoas/reserva'}
                 </InputLabel>
                 <Input
                   id={'maxPersons'}
@@ -212,6 +212,25 @@ const ConfigModal: React.FC<Props> = ({ handleCloseModal }) => {
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
               }}>
+              <FormControl className={clsx(classes.margin, classes.textField)}>
+                <InputLabel htmlFor={'totalPersons'}>
+                  {'Total de pessoas'}
+                </InputLabel>
+                <Input
+                  id={'totalPersons'}
+                  type={'number'}
+                  // value={''}
+                  name={'total'}
+                  inputProps={{ min: 0 }}
+                  onChange={() => {}}
+                  disabled={!acceptReserves}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <Group fontSize={'small'} />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
               <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor={'signal'}>{'Valor do sinal'}</InputLabel>
                 <Input

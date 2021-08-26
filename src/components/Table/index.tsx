@@ -15,15 +15,19 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import SendIcon from '@material-ui/icons/Send';
 import SettingsIcon from '@material-ui/icons/Settings';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import CreateUpdateModal from '../CreateUpdateModal';
 import { format } from 'date-fns';
 
 import Paper from '@material-ui/core/Paper';
 import { Box, Button, Typography } from '@material-ui/core';
-import ConfigModal from '../ConfigModal';
+import ConfigModal from '../../views/ReservesView/components/ConfigModal';
 
 import { Palette } from '../../utils/palette';
 import { translations } from '../Drawer';
+import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserveModal';
+import ConfirmDialog from '../ConfirmDialog';
 
 interface Data {
   calories: number;
@@ -176,6 +180,12 @@ const ResponsiveTable: React.FC<Props> = ({
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
   const [openModal, setOpenModal] = useState(false);
   const [openConfigModal, setOpenConfigModal] = useState(false);
+  const [openAnswerReserveModal, setOpenAnswerReserveModal] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [confirmDialogContent, setConfirmDialogContent] = useState({
+    title: '',
+    text: '',
+  });
 
   const [page, setPage] = React.useState(0);
 
@@ -235,6 +245,20 @@ const ResponsiveTable: React.FC<Props> = ({
     //useRef para transportar dados se existirem para dentro dos fields do modal
 
     setOpenConfigModal(!openConfigModal);
+  };
+
+  const handleAnswerReserveModal = (data?: any) => {
+    if (data) {
+      modalDataRef.current = data;
+    }
+    setOpenAnswerReserveModal(!openAnswerReserveModal);
+  };
+
+  const handleConfirmDialog = (title?: string, text?: string) => {
+    if (title && text) {
+      setConfirmDialogContent({ title: title, text: text });
+    }
+    setOpenConfirmDialog(!openConfirmDialog);
   };
 
   return (
@@ -300,6 +324,20 @@ const ResponsiveTable: React.FC<Props> = ({
             {openConfigModal && (
               <ConfigModal handleCloseModal={handleConfigModal} />
             )}
+            {openAnswerReserveModal && (
+              <AnswerReserveModal
+                handleCloseModal={handleAnswerReserveModal}
+                dataRef={modalDataRef}
+              />
+            )}
+            {openConfirmDialog && (
+              <ConfirmDialog
+                title={confirmDialogContent.title}
+                text={confirmDialogContent.text}
+                open={openConfirmDialog}
+                handleClose={handleConfirmDialog}
+              />
+            )}
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -325,17 +363,59 @@ const ResponsiveTable: React.FC<Props> = ({
                                 <SendIcon />
                               </IconButton>
                             )}
-                            <IconButton
-                              aria-label="edit"
-                              onClick={() => handleModal(d)}
-                              style={
-                                !notifications ? { marginLeft: '-28px' } : {}
-                              }>
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton aria-label="delete">
-                              <DeleteIcon />
-                            </IconButton>
+                            {reserve && (
+                              <>
+                                <IconButton
+                                  aria-label="confirm"
+                                  onClick={() =>
+                                    handleConfirmDialog(
+                                      'Confirmação',
+                                      'Pretende aceitar o pedido de reserva?',
+                                    )
+                                  }>
+                                  <CheckCircleIcon />
+                                </IconButton>
+                                <IconButton
+                                  aria-label="edit"
+                                  //Change this modal to another one, for can give a sugestion to another hour for the reservation
+                                  onClick={() => handleAnswerReserveModal(d)}
+                                  style={
+                                    !notifications && !reserve
+                                      ? { marginLeft: '-28px' }
+                                      : {}
+                                  }>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton
+                                  aria-label="decline"
+                                  onClick={() =>
+                                    handleConfirmDialog(
+                                      'Confirmação',
+                                      'Pretende rejeitar o pedido de reserva?',
+                                    )
+                                  }>
+                                  <NotInterestedIcon />
+                                </IconButton>
+                              </>
+                            )}
+                            {!reserve && (
+                              <>
+                                <IconButton
+                                  aria-label="edit"
+                                  onClick={() => handleModal(d)}
+                                  style={
+                                    !notifications && !reserve
+                                      ? { marginLeft: '-28px' }
+                                      : {}
+                                  }>
+                                  <EditIcon />
+                                </IconButton>
+
+                                <IconButton aria-label="delete">
+                                  <DeleteIcon />
+                                </IconButton>
+                              </>
+                            )}
                           </div>
                         </TableCell>
                       )}

@@ -8,8 +8,10 @@ const clientsData = [
     firstName: 'patrick',
     lastName: 'forsthofer',
     email: 'teste1234@gmail.com',
+    phoneNumber: '913060881',
     points: '20',
     numberOfVisits: '2',
+    expense: 20,
     createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
@@ -17,8 +19,10 @@ const clientsData = [
     firstName: 'Tomas',
     lastName: 'Santos',
     email: 'teste1234@gmail.com',
+    phoneNumber: '913060881',
     points: '10',
     numberOfVisits: '22',
+    expense: 20,
     createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
@@ -26,8 +30,10 @@ const clientsData = [
     firstName: 'Tiago',
     lastName: 'Neto',
     email: 'teste1234@gmail.com',
+    phoneNumber: '913060881',
     points: '20',
     numberOfVisits: '42',
+    expense: 20,
     createdAt: /*new Date(1996, 4, 23)*/ new Date('2014-08-18T21:11:54'),
   },
 ];
@@ -65,6 +71,14 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
+    id: 'phoneNumber',
+    numeric: true,
+    disablePadding: false,
+    label: 'Contacto',
+    type: 'number',
+    isEditable: true,
+  },
+  {
     id: 'points',
     numeric: true,
     disablePadding: false,
@@ -79,6 +93,14 @@ const headCells: HeadCell[] = [
     label: 'Numbero de visitas',
     type: 'number',
     isEditable: false,
+  },
+  {
+    id: 'expense',
+    numeric: true,
+    disablePadding: false,
+    label: 'Despesa',
+    type: 'number',
+    isEditable: true,
   },
   {
     id: 'createdAt',

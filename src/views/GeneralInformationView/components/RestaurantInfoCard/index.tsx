@@ -2,12 +2,19 @@ import React, { useState } from 'react';
 import {
   Button,
   Card,
+  Checkbox,
   FormControl,
   IconButton,
   Input,
   InputAdornment,
   InputLabel,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
   Modal,
+  TextField,
 } from '@material-ui/core';
 import clsx from 'clsx';
 
@@ -15,9 +22,18 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Palette } from '../../../../utils/palette';
+/*
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import TimePicker from '@material-ui/lab/TimePicker';*/
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
     paper: {
       position: 'absolute',
       width: 400,
@@ -41,10 +57,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const InfoCard = () => {
+type Props = {
+  data: any;
+};
+
+const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
   const classes = useStyles();
   const [openModal, setOpenModal] = useState(false);
+  const [checked, setChecked] = useState([0]);
+  const [breakfastChecked, setBreakfastChecked] = useState(false);
+  const [lunchChecked, setLunchChecked] = useState(false);
+  const [dinnerChecked, setDinnerChecked] = useState(false);
+  const [value, setValue] = React.useState<Date | null>(
+    new Date('2018-01-01T00:00:00.000Z'),
+  );
 
+  const handleToggle = (value: number) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
   const handleCloseModal = () => {
     setOpenModal(!openModal);
   };
@@ -62,7 +101,7 @@ const InfoCard = () => {
           style={{
             paddingLeft: '20px',
           }}>
-          Informação Geral
+          Informação do Restaurante
         </h2>
         <Button
           style={{
@@ -293,8 +332,109 @@ const InfoCard = () => {
           </form>
         </div>
       </Modal>
+
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <List style={{ display: 'flex', flexDirection: 'row' }}>
+            <ListItem>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={breakfastChecked}
+                  tabIndex={-1}
+                  onClick={() => setBreakfastChecked(!breakfastChecked)}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': 'breakfast' }}
+                />
+              </ListItemIcon>
+              <ListItemText id={'breakfast'} primary={'Pequeno-Almoço'} />
+            </ListItem>
+
+            <ListItem>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={lunchChecked}
+                  tabIndex={-1}
+                  onClick={() => setLunchChecked(!lunchChecked)}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': 'lunch' }}
+                />
+              </ListItemIcon>
+              <ListItemText id={'lunch'} primary={'Almoço'} />
+            </ListItem>
+
+            <ListItem>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={dinnerChecked}
+                  tabIndex={-1}
+                  onClick={() => setDinnerChecked(!dinnerChecked)}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': 'dinner' }}
+                />
+              </ListItemIcon>
+              <ListItemText id={'dinner'} primary={'Jantar'} />
+            </ListItem>
+          </List>
+        </div>
+        <List className={classes.root}>
+          {[0, 1, 2, 3, 4, 5, 6].map(value => {
+            const weekDay = (value: number) => {
+              switch (value) {
+                case 0:
+                  return 'Segunda-feira';
+                case 1:
+                  return 'Terça-feira';
+                case 2:
+                  return 'Quarta-feira';
+                case 3:
+                  return 'Quinta-feira';
+                case 4:
+                  return 'Sexta-feira';
+                case 5:
+                  return 'Sábado';
+                case 6:
+                  return 'Domingo';
+                default:
+                  return;
+              }
+            };
+
+            return (
+              <ListItem
+                key={value}
+                role={undefined}
+                dense
+                button
+                onClick={handleToggle(value)}>
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    checked={checked.indexOf(value) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{ 'aria-labelledby': weekDay(value) }}
+                  />
+                </ListItemIcon>
+                <ListItemText id={weekDay(value)} primary={weekDay(value)} />
+                <ListItemSecondaryAction>
+                  {/*<LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <TimePicker
+                            value={value}
+                            onChange={setValue}
+                            renderInput={params => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>*/}
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
+      </div>
     </Card>
   );
 };
 
-export default InfoCard;
+export default RestaurantInfoCard;
