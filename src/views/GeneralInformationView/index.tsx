@@ -10,8 +10,13 @@ import {
 import RestaurantInfoCard from './components/RestaurantInfoCard';
 import UserInfoCard from './components/UserInfoCard';
 import clsx from 'clsx';
-// @ts-ignore
-import { BlockPicker } from 'react-color';
+import MobileAppCard from './components/MobileAppCard';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import WorkHoursCard from './components/WorkHoursCard';
 
 const userDate = {
   firstName: 'Patrick',
@@ -50,38 +55,84 @@ const restaurantData = {
   facilities: ['wc', 'zona de fumadores', 'esplanada'],
 };
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}>
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: any) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    'aria-controls': `scrollable-auto-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    width: '100%',
+    // backgroundColor: theme.palette.background.paper,
+  },
+}));
+
 const GeneralInformationView = () => {
+  const classes = useStyles();
   const [mainColor, setMainColor] = useState();
   const [secondaryColor, setSecondaryColor] = useState();
+  const [valueTabs, setValueTabs] = React.useState(0);
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValueTabs(newValue);
+  };
   return (
     <ResponsiveDrawer>
-      <div>
-        <UserInfoCard />
-        <RestaurantInfoCard data={restaurantData} />
-        <Card style={{ marginTop: '30px' }} raised={true}>
-          <h2
-            style={{
-              paddingLeft: '20px',
-            }}>
-            Informação da Aplicação Móvel
-          </h2>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              textAlign: 'center',
-            }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h3>Cor Principal</h3>
-              <BlockPicker />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h3>Cor Secundária</h3>
-              <BlockPicker />
-            </div>
-          </div>
-        </Card>
+      <div className={classes.root}>
+        <Tabs
+          value={valueTabs}
+          style={{ maxWidth: '100%' }}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example">
+          <Tab label="Informação do Utilizador" {...a11yProps(0)} />
+          <Tab label="Informação Geral do Restaurante" {...a11yProps(1)} />
+          <Tab label="Horas de Funcionamento" {...a11yProps(2)} />
+          <Tab label="Informação da Aplicação Móvel" {...a11yProps(3)} />
+        </Tabs>
+        <TabPanel value={valueTabs} index={0}>
+          <UserInfoCard />
+        </TabPanel>
+        <TabPanel value={valueTabs} index={1}>
+          <RestaurantInfoCard />
+        </TabPanel>
+        <TabPanel value={valueTabs} index={2}>
+          <WorkHoursCard />
+        </TabPanel>
+        <TabPanel value={valueTabs} index={3}>
+          <MobileAppCard />
+        </TabPanel>
       </div>
     </ResponsiveDrawer>
   );

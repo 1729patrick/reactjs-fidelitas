@@ -126,7 +126,8 @@ const CreateUpdateModal: React.FC<Props> = ({
               field.isEditable &&
               (field.type === 'text' ||
                 field.type === 'number' ||
-                field.type === 'checkbox')
+                field.type === 'checkbox' ||
+                field.type === 'email')
             ) {
               return (
                 <TextField
