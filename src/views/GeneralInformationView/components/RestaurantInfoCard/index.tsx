@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Checkbox,
+  Divider,
   FormControl,
   IconButton,
   Input,
@@ -26,6 +27,7 @@ import { Palette } from '../../../../utils/palette';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import TimePicker from '@material-ui/lab/TimePicker';*/
+import TimePicker from 'react-time-picker';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,7 +66,7 @@ type Props = {
 const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
   const classes = useStyles();
   const [openModal, setOpenModal] = useState(false);
-  const [checked, setChecked] = useState([0]);
+  const [checked, setChecked] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [breakfastChecked, setBreakfastChecked] = useState(false);
   const [lunchChecked, setLunchChecked] = useState(false);
   const [dinnerChecked, setDinnerChecked] = useState(false);
@@ -72,16 +74,10 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
     new Date('2018-01-01T00:00:00.000Z'),
   );
 
-  const handleToggle = (value: number) => () => {
+  const handleCheckWeekDay = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
+    let newChecked = [...checked];
+    newChecked[currentIndex] = newChecked[currentIndex] === 0 ? 1 : 0;
     setChecked(newChecked);
   };
   const handleCloseModal = () => {
@@ -333,8 +329,13 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
         </div>
       </Modal>
 
-      <div>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div style={{ width: '100%' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
           <List style={{ display: 'flex', flexDirection: 'row' }}>
             <ListItem>
               <ListItemIcon>
@@ -345,6 +346,7 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
                   onClick={() => setBreakfastChecked(!breakfastChecked)}
                   disableRipple
                   inputProps={{ 'aria-labelledby': 'breakfast' }}
+                  onChange={() => setBreakfastChecked(!breakfastChecked)}
                 />
               </ListItemIcon>
               <ListItemText id={'breakfast'} primary={'Pequeno-Almoço'} />
@@ -359,6 +361,7 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
                   onClick={() => setLunchChecked(!lunchChecked)}
                   disableRipple
                   inputProps={{ 'aria-labelledby': 'lunch' }}
+                  onChange={() => setLunchChecked(!lunchChecked)}
                 />
               </ListItemIcon>
               <ListItemText id={'lunch'} primary={'Almoço'} />
@@ -373,13 +376,21 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
                   onClick={() => setDinnerChecked(!dinnerChecked)}
                   disableRipple
                   inputProps={{ 'aria-labelledby': 'dinner' }}
+                  onChange={() => setDinnerChecked(!dinnerChecked)}
                 />
               </ListItemIcon>
               <ListItemText id={'dinner'} primary={'Jantar'} />
             </ListItem>
           </List>
         </div>
-        <List className={classes.root}>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           {[0, 1, 2, 3, 4, 5, 6].map(value => {
             const weekDay = (value: number) => {
               switch (value) {
@@ -403,35 +414,114 @@ const RestaurantInfoCard: React.FC<Props> = ({ data }) => {
             };
 
             return (
-              <ListItem
+              <div
                 key={value}
-                role={undefined}
-                dense
-                button
-                onClick={handleToggle(value)}>
-                <ListItemIcon>
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
                   <Checkbox
-                    edge="start"
-                    checked={checked.indexOf(value) !== -1}
+                    checked={checked[value] === 1}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ 'aria-labelledby': weekDay(value) }}
+                    onClick={() => handleCheckWeekDay(value)}
                   />
-                </ListItemIcon>
-                <ListItemText id={weekDay(value)} primary={weekDay(value)} />
-                <ListItemSecondaryAction>
-                  {/*<LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <TimePicker
-                            value={value}
-                            onChange={setValue}
-                            renderInput={params => <TextField {...params} />}
-                        />
-                    </LocalizationProvider>*/}
-                </ListItemSecondaryAction>
-              </ListItem>
+
+                  <p>{weekDay(value)}</p>
+                </div>
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}>
+                  {breakfastChecked && (
+                    <div
+                      style={{
+                        flex: 1,
+                        margin: '10px 0px 10px 0px',
+                        textAlign: 'center',
+                      }}>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                      <p>até</p>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    flex: 1,
+                    margin: '10px 0px 10px 0px',
+                    textAlign: 'center',
+                  }}>
+                  {lunchChecked && (
+                    <div>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                      <p>até</p>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    flex: 1,
+                    margin: '10px 0px 10px 0px',
+                    textAlign: 'center',
+                  }}>
+                  {dinnerChecked && (
+                    <div>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                      <p>até</p>
+                      <TimePicker
+                        disableClock={true}
+                        clearIcon={null}
+                        onChange={() => {}}
+                        value={new Date()}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             );
           })}
-        </List>
+        </div>
       </div>
     </Card>
   );
