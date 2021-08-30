@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Card, Typography } from '@material-ui/core';
-import { Palette } from '../../../../utils/palette';
-import { translations } from '../../../../components/Drawer';
-import CreateUpdateModal from '../../../../components/CreateUpdateModal';
+import { Palette } from '../../../../../utils/palette';
+import { translations } from '../../../../../components/Drawer';
+import CreateUpdateModal from '../../../../../components/CreateUpdateModal';
 
 interface HeadCell {
   disablePadding: boolean;

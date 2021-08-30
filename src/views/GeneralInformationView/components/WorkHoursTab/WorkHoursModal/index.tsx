@@ -6,10 +6,42 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Modal,
 } from '@material-ui/core';
 import TimePicker from 'react-time-picker';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-const WorkHoursCard = () => {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      position: 'absolute',
+      width: 900,
+
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: 8,
+      padding: theme.spacing(2, 4, 3),
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%,-50%)',
+    },
+    modalStyle: {
+      overflow: 'scroll',
+      display: 'block',
+
+      position: 'absolute',
+      top: '10%',
+      left: '10%',
+    },
+  }),
+);
+
+type PropsType = {
+  open: boolean;
+  handleCloseModal: () => void;
+};
+
+const WorkHoursModal: React.FC<PropsType> = ({ open, handleCloseModal }) => {
+  const classes = useStyles();
   const [checked, setChecked] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [breakfastChecked, setBreakfastChecked] = useState(false);
   const [lunchChecked, setLunchChecked] = useState(false);
@@ -22,8 +54,13 @@ const WorkHoursCard = () => {
     setChecked(newChecked);
   };
   return (
-    <Card raised={true}>
-      <div style={{ width: '100%' }}>
+    <Modal
+      open={open}
+      onClose={() => handleCloseModal()}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+      className={classes.modalStyle}>
+      <div className={classes.paper}>
         <h2
           style={{
             paddingLeft: '20px',
@@ -119,9 +156,9 @@ const WorkHoursCard = () => {
                 style={{
                   width: '100%',
                   display: 'flex',
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   justifyContent: 'center',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                 }}>
                 <div
                   style={{
@@ -142,15 +179,20 @@ const WorkHoursCard = () => {
                 <div
                   style={{
                     flex: 1,
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
                   {breakfastChecked && (
                     <div
                       style={{
                         flex: 1,
-                        margin: '10px 0px 10px 0px',
+                        // margin: '10px 0px 10px 0px',
                         textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
                       }}>
                       <TimePicker
                         disableClock={true}
@@ -158,7 +200,8 @@ const WorkHoursCard = () => {
                         onChange={() => {}}
                         value={new Date()}
                       />
-                      <p>até</p>
+                      <p style={{ margin: '0px 5px' }}>até</p>
+
                       <TimePicker
                         disableClock={true}
                         clearIcon={null}
@@ -167,23 +210,24 @@ const WorkHoursCard = () => {
                       />
                     </div>
                   )}
-                </div>
 
-                <div
-                  style={{
-                    flex: 1,
-                    margin: '10px 0px 10px 0px',
-                    textAlign: 'center',
-                  }}>
                   {lunchChecked && (
-                    <div>
+                    <div
+                      style={{
+                        flex: 1,
+                        //margin: '10px 0px 10px 0px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
                       <TimePicker
                         disableClock={true}
                         clearIcon={null}
                         onChange={() => {}}
                         value={new Date()}
                       />
-                      <p>até</p>
+                      <p style={{ margin: '0px 5px' }}>até</p>
+
                       <TimePicker
                         disableClock={true}
                         clearIcon={null}
@@ -192,23 +236,23 @@ const WorkHoursCard = () => {
                       />
                     </div>
                   )}
-                </div>
 
-                <div
-                  style={{
-                    flex: 1,
-                    margin: '10px 0px 10px 0px',
-                    textAlign: 'center',
-                  }}>
                   {dinnerChecked && (
-                    <div>
+                    <div
+                      style={{
+                        flex: 1,
+                        //  margin: '10px 0px 10px 0px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
                       <TimePicker
                         disableClock={true}
                         clearIcon={null}
                         onChange={() => {}}
                         value={new Date()}
                       />
-                      <p>até</p>
+                      <p style={{ margin: '0px 5px' }}>até</p>
                       <TimePicker
                         disableClock={true}
                         clearIcon={null}
@@ -223,8 +267,8 @@ const WorkHoursCard = () => {
           })}
         </div>
       </div>
-    </Card>
+    </Modal>
   );
 };
 
-export default WorkHoursCard;
+export default WorkHoursModal;

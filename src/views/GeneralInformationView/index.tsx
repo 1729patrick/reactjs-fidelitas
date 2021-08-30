@@ -7,8 +7,8 @@ import {
   InputAdornment,
   InputLabel,
 } from '@material-ui/core';
-import RestaurantInfoCard from './components/RestaurantInfoCard';
-import UserInfoCard from './components/UserInfoCard';
+import RestaurantInfoCard from './components/RestaurantInfoTab/RestaurantInfoCard';
+import UserInfoCard from './components/UserInfoTab/UserInfoCard';
 import clsx from 'clsx';
 import MobileAppCard from './components/MobileAppCard';
 import Tabs from '@material-ui/core/Tabs';
@@ -16,7 +16,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import WorkHoursCard from './components/WorkHoursCard';
+import WorkHoursCard from './components/WorkHoursTab/WorkHoursCard';
 
 const userDate = {
   firstName: 'Patrick',

@@ -24,13 +24,13 @@ import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Palette } from '../../../../utils/palette';
+import { Palette } from '../../../../../utils/palette';
 /*
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import TimePicker from '@material-ui/lab/TimePicker';*/
 import TimePicker from 'react-time-picker';
-import CreateUpdateModal from '../../../../components/CreateUpdateModal';
+import CreateUpdateModal from '../../../../../components/CreateUpdateModal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
