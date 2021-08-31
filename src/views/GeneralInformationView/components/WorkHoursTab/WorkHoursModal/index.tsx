@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       position: 'absolute',
       width: 900,
-
       backgroundColor: theme.palette.background.paper,
       borderRadius: 8,
       padding: theme.spacing(2, 4, 3),

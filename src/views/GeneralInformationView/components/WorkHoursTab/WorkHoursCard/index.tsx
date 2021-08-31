@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
   List,
   ListItem,
   ListItemIcon,
@@ -16,9 +15,9 @@ import { Palette } from '../../../../../utils/palette';
 
 const WorkHoursCard = () => {
   const [checked, setChecked] = useState([0, 0, 0, 0, 0, 0, 0]);
-  const [breakfastChecked, setBreakfastChecked] = useState(false);
-  const [lunchChecked, setLunchChecked] = useState(false);
-  const [dinnerChecked, setDinnerChecked] = useState(false);
+  const [breakfastChecked, setBreakfastChecked] = useState(true);
+  const [lunchChecked, setLunchChecked] = useState(true);
+  const [dinnerChecked, setDinnerChecked] = useState(true);
   const [openModal, setOpenModal] = useState(false);
 
   const handleModal = () => {
@@ -57,56 +56,16 @@ const WorkHoursCard = () => {
 
         <div
           style={{
+            width: '100%',
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'center',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
           }}>
-          <List style={{ display: 'flex', flexDirection: 'row' }}>
-            <ListItem>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={breakfastChecked}
-                  tabIndex={-1}
-                  onClick={() => setBreakfastChecked(!breakfastChecked)}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': 'breakfast' }}
-                  onChange={() => setBreakfastChecked(!breakfastChecked)}
-                />
-              </ListItemIcon>
-              <ListItemText id={'breakfast'} primary={'Pequeno-Almoço'} />
-            </ListItem>
+          <h4>Pequeno-Almoço</h4>
 
-            <ListItem>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={lunchChecked}
-                  tabIndex={-1}
-                  onClick={() => setLunchChecked(!lunchChecked)}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': 'lunch' }}
-                  onChange={() => setLunchChecked(!lunchChecked)}
-                />
-              </ListItemIcon>
-              <ListItemText id={'lunch'} primary={'Almoço'} />
-            </ListItem>
-
-            <ListItem>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={dinnerChecked}
-                  tabIndex={-1}
-                  onClick={() => setDinnerChecked(!dinnerChecked)}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': 'dinner' }}
-                  onChange={() => setDinnerChecked(!dinnerChecked)}
-                />
-              </ListItemIcon>
-              <ListItemText id={'dinner'} primary={'Jantar'} />
-            </ListItem>
-          </List>
+          <h4>Almoço</h4>
+          <h4>Jantar </h4>
         </div>
         <div
           style={{
@@ -115,6 +74,7 @@ const WorkHoursCard = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            marginLeft: '10px',
           }}>
           {[0, 1, 2, 3, 4, 5, 6].map(value => {
             const weekDay = (value: number) => {
@@ -144,31 +104,22 @@ const WorkHoursCard = () => {
                 style={{
                   width: '100%',
                   display: 'flex',
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   justifyContent: 'center',
-                  alignItems: 'center',
                 }}>
                 <div
                   style={{
-                    flex: 1,
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                   }}>
-                  <Checkbox
-                    checked={checked[value] === 1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ 'aria-labelledby': weekDay(value) }}
-                    onClick={() => handleCheckWeekDay(value)}
-                  />
-
                   <p>{weekDay(value)}</p>
                 </div>
                 <div
                   style={{
-                    flex: 1,
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'row',
+                    justifyContent: 'space-evenly',
                   }}>
                   {breakfastChecked && (
                     <div
@@ -176,70 +127,37 @@ const WorkHoursCard = () => {
                         flex: 1,
                         margin: '10px 0px 10px 0px',
                         textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
                       }}>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
-                      <p>até</p>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
+                      <span>7:00 até 10:00</span>
                     </div>
                   )}
-                </div>
 
-                <div
-                  style={{
-                    flex: 1,
-                    margin: '10px 0px 10px 0px',
-                    textAlign: 'center',
-                  }}>
                   {lunchChecked && (
-                    <div>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
-                      <p>até</p>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
+                    <div
+                      style={{
+                        flex: 1,
+                        margin: '10px 0px 10px 0px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
+                      <span>12:00 até 14:00</span>
                     </div>
                   )}
-                </div>
 
-                <div
-                  style={{
-                    flex: 1,
-                    margin: '10px 0px 10px 0px',
-                    textAlign: 'center',
-                  }}>
                   {dinnerChecked && (
-                    <div>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
-                      <p>até</p>
-                      <TimePicker
-                        disableClock={true}
-                        clearIcon={null}
-                        onChange={() => {}}
-                        value={new Date()}
-                      />
+                    <div
+                      style={{
+                        flex: 1,
+                        margin: '10px 0px 10px 0px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
+                      <span>19:00 até 22:00</span>
                     </div>
                   )}
                 </div>
