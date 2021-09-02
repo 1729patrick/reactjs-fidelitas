@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Card,
   Checkbox,
   List,
@@ -22,6 +23,8 @@ const useStyles = makeStyles((theme: Theme) =>
       top: '50%',
       left: '50%',
       transform: 'translate(-50%,-50%)',
+      display: 'flex',
+      flexDirection: 'column',
     },
     modalStyle: {
       overflow: 'scroll',
@@ -172,7 +175,6 @@ const WorkHoursModal: React.FC<PropsType> = ({ open, handleCloseModal }) => {
                     inputProps={{ 'aria-labelledby': weekDay(value) }}
                     onClick={() => handleCheckWeekDay(value)}
                   />
-
                   <p>{weekDay(value)}</p>
                 </div>
                 <div
@@ -264,6 +266,21 @@ const WorkHoursModal: React.FC<PropsType> = ({ open, handleCloseModal }) => {
               </div>
             );
           })}
+        </div>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginLeft: '5px' }}
+            type="submit">
+            Editar
+          </Button>
         </div>
       </div>
     </Modal>

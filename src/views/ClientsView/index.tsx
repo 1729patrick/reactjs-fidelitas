@@ -12,7 +12,7 @@ const clientsData = [
     points: '20',
     numberOfVisits: '2',
     expense: 20,
-    createdAt: new Date('2014-08-18T21:11:54'),
+    //  createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const clientsData = [
     points: '10',
     numberOfVisits: '22',
     expense: 20,
-    createdAt: new Date('2014-08-18T21:11:54'),
+    //createdAt: new Date('2014-08-18T21:11:54'),
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const clientsData = [
     points: '20',
     numberOfVisits: '42',
     expense: 20,
-    createdAt: /*new Date(1996, 4, 23)*/ new Date('2014-08-18T21:11:54'),
+    // createdAt: /*new Date(1996, 4, 23)*/ new Date('2014-08-18T21:11:54'),
   },
 ];
 interface HeadCell {
@@ -102,14 +102,14 @@ const headCells: HeadCell[] = [
     type: 'number',
     isEditable: true,
   },
-  {
+  /*{
     id: 'createdAt',
     numeric: false,
     disablePadding: false,
     label: 'Criado em',
     type: 'date',
     isEditable: false,
-  },
+  },*/
 ];
 
 const ClientsView = () => {
@@ -120,6 +120,7 @@ const ClientsView = () => {
         fields={headCells}
         actions={true}
         title={'Cliente'}
+        clients={true}
       />
     </ResponsiveDrawer>
   );

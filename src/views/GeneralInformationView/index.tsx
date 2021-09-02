@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import WorkHoursCard from './components/WorkHoursTab/WorkHoursCard';
+import FacilitiesCard from './components/FacilitiesTab/FacilitiesCard';
 
 const userDate = {
   firstName: 'Patrick',
@@ -119,7 +120,8 @@ const GeneralInformationView = () => {
           <Tab label="Informação do Utilizador" {...a11yProps(0)} />
           <Tab label="Informação Geral do Restaurante" {...a11yProps(1)} />
           <Tab label="Horas de Funcionamento" {...a11yProps(2)} />
-          <Tab label="Informação da Aplicação Móvel" {...a11yProps(3)} />
+          <Tab label="Facilidades" {...a11yProps(3)} />
+          <Tab label="Informação da Aplicação Móvel" {...a11yProps(4)} />
         </Tabs>
         <TabPanel value={valueTabs} index={0}>
           <UserInfoCard />
@@ -131,6 +133,9 @@ const GeneralInformationView = () => {
           <WorkHoursCard />
         </TabPanel>
         <TabPanel value={valueTabs} index={3}>
+          <FacilitiesCard />
+        </TabPanel>
+        <TabPanel value={valueTabs} index={4}>
           <MobileAppCard />
         </TabPanel>
       </div>

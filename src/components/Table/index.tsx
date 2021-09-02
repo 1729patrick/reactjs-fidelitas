@@ -28,6 +28,7 @@ import { Palette } from '../../utils/palette';
 import { translations } from '../Drawer';
 import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserveModal';
 import ConfirmDialog from '../ConfirmDialog';
+import NotificationModal from '../../views/ClientsView/components/NotificationModal';
 
 interface Data {
   calories: number;
@@ -165,6 +166,7 @@ type Props = {
   title?: string;
   notifications?: boolean;
   reserve?: boolean;
+  clients?: boolean;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
@@ -174,6 +176,7 @@ const ResponsiveTable: React.FC<Props> = ({
   title,
   notifications = false,
   reserve = false,
+  clients = false,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -181,6 +184,8 @@ const ResponsiveTable: React.FC<Props> = ({
   const [openModal, setOpenModal] = useState(false);
   const [openConfigModal, setOpenConfigModal] = useState(false);
   const [openAnswerReserveModal, setOpenAnswerReserveModal] = useState(false);
+  const [openSendNotificationModal, setOpenSendNotificationModal] =
+    useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [confirmDialogContent, setConfirmDialogContent] = useState({
     title: '',
@@ -245,6 +250,14 @@ const ResponsiveTable: React.FC<Props> = ({
     //useRef para transportar dados se existirem para dentro dos fields do modal
 
     setOpenConfigModal(!openConfigModal);
+  };
+
+  const handleSendNotificationModal = () => {
+    if (clients) {
+      setOpenSendNotificationModal(!openSendNotificationModal);
+    }
+    if (notifications) {
+    }
   };
 
   const handleAnswerReserveModal = (data?: any) => {
@@ -330,6 +343,12 @@ const ResponsiveTable: React.FC<Props> = ({
                 dataRef={modalDataRef}
               />
             )}
+            {openSendNotificationModal && (
+              <NotificationModal
+                open={openSendNotificationModal}
+                handleCloseModal={handleSendNotificationModal}
+              />
+            )}
             {openConfirmDialog && (
               <ConfirmDialog
                 title={confirmDialogContent.title}
@@ -352,14 +371,22 @@ const ResponsiveTable: React.FC<Props> = ({
                             </TableCell>
                           ),
                       )}
+
                       {actions && (
                         <TableCell align={'left'}>
                           <div
-                            style={{ display: 'flex', flexDirection: 'row' }}>
-                            {notifications && (
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                            }}>
+                            {(notifications || clients) && (
                               <IconButton
                                 aria-label="send"
-                                style={{ marginLeft: '-28px' }}>
+                                style={{
+                                  marginLeft: notifications ? '-28px' : '-28px',
+                                }}
+                                onClick={handleSendNotificationModal}>
                                 <SendIcon />
                               </IconButton>
                             )}
@@ -404,7 +431,7 @@ const ResponsiveTable: React.FC<Props> = ({
                                   aria-label="edit"
                                   onClick={() => handleModal(d)}
                                   style={
-                                    !notifications && !reserve
+                                    !notifications && !reserve && !clients
                                       ? { marginLeft: '-28px' }
                                       : {}
                                   }>

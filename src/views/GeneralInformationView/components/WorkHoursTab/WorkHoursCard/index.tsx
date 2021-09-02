@@ -7,6 +7,11 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   Typography,
 } from '@material-ui/core';
 import TimePicker from 'react-time-picker';
@@ -54,117 +59,51 @@ const WorkHoursCard = () => {
           </Button>
         </Box>
 
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-          }}>
-          <h4>Pequeno-Almoço</h4>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Pequeno-Almoço</TableCell>
+              <TableCell>Almoço</TableCell>
+              <TableCell>Jantar</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {[0, 1, 2, 3, 4, 5, 6].map(value => {
+              const weekDay = (value: number) => {
+                switch (value) {
+                  case 0:
+                    return 'Segunda-feira';
+                  case 1:
+                    return 'Terça-feira';
+                  case 2:
+                    return 'Quarta-feira';
+                  case 3:
+                    return 'Quinta-feira';
+                  case 4:
+                    return 'Sexta-feira';
+                  case 5:
+                    return 'Sábado';
+                  case 6:
+                    return 'Domingo';
+                  default:
+                    return;
+                }
+              };
 
-          <h4>Almoço</h4>
-          <h4>Jantar </h4>
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: '10px',
-          }}>
-          {[0, 1, 2, 3, 4, 5, 6].map(value => {
-            const weekDay = (value: number) => {
-              switch (value) {
-                case 0:
-                  return 'Segunda-feira';
-                case 1:
-                  return 'Terça-feira';
-                case 2:
-                  return 'Quarta-feira';
-                case 3:
-                  return 'Quinta-feira';
-                case 4:
-                  return 'Sexta-feira';
-                case 5:
-                  return 'Sábado';
-                case 6:
-                  return 'Domingo';
-                default:
-                  return;
-              }
-            };
+              return (
+                <TableRow key={value}>
+                  <TableCell>{weekDay(value)}</TableCell>
+                  {breakfastChecked && <TableCell>7:00 até 10:00</TableCell>}
 
-            return (
-              <div
-                key={value}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}>
-                  <p>{weekDay(value)}</p>
-                </div>
-                <div
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                  }}>
-                  {breakfastChecked && (
-                    <div
-                      style={{
-                        flex: 1,
-                        margin: '10px 0px 10px 0px',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                      }}>
-                      <span>7:00 até 10:00</span>
-                    </div>
-                  )}
+                  {lunchChecked && <TableCell>12:00 até 14:00</TableCell>}
 
-                  {lunchChecked && (
-                    <div
-                      style={{
-                        flex: 1,
-                        margin: '10px 0px 10px 0px',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'row',
-                      }}>
-                      <span>12:00 até 14:00</span>
-                    </div>
-                  )}
-
-                  {dinnerChecked && (
-                    <div
-                      style={{
-                        flex: 1,
-                        margin: '10px 0px 10px 0px',
-                        textAlign: 'center',
-                        display: 'flex',
-                        flexDirection: 'row',
-                      }}>
-                      <span>19:00 até 22:00</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                  {dinnerChecked && <TableCell>19:00 até 22:00</TableCell>}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </div>
     </Card>
   );
