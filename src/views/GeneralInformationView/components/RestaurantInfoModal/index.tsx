@@ -23,7 +23,7 @@ import {
   ListItemText,
   Modal,
 } from '@material-ui/core';
-import { Palette } from '../../../../utils/palette';
+import { Palette } from '../../../../utils/Palette';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import clsx from 'clsx';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';

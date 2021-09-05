@@ -1,6 +1,7 @@
 import ResponsiveDrawer from '../../components/Drawer';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ResponsiveTable from '../../components/Table';
+import { useProducts } from '../../api/useProducts';
 
 const productsData = [
   {
@@ -59,7 +60,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'name',
+    id: 'title',
     numeric: false,
     disablePadding: false,
     label: 'Nome',
@@ -91,7 +92,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'menuType',
+    id: 'type',
     numeric: false,
     disablePadding: false,
     label: 'Menu',
@@ -109,14 +110,20 @@ const headCells: HeadCell[] = [
 ];
 
 const ProductsView = () => {
+  const products = useProducts();
+
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={productsData}
-        fields={headCells}
-        actions={true}
-        title={'Produtos'}
-      />
+      {products.products ? (
+        <ResponsiveTable
+          data={products.products}
+          fields={headCells}
+          actions={true}
+          title={'Produtos'}
+        />
+      ) : (
+        <div>ola</div>
+      )}
     </ResponsiveDrawer>
   );
 };

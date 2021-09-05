@@ -9,8 +9,14 @@ import GeneralInformationView from './GeneralInformationView';
 import NotificationsView from './NotificationsView';
 import MenuView from './MenuView';
 import ProductsView from './ProductsView';
+import { useAuth } from '../contexts/Auth';
 
 export default function App() {
+  const { token } = useAuth();
+  if (!token) {
+    return <p>...loading</p>;
+  }
+
   return (
     <Router>
       <Switch>

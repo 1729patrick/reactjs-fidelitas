@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, Typography } from '@material-ui/core';
 import CreateUpdateModal from '../../../../../components/CreateUpdateModal';
-import { Palette } from '../../../../../utils/palette';
+import { Palette } from '../../../../../utils/Palette';
 import SmokingRoomsIcon from '@material-ui/icons/SmokingRooms';
 import AccessibleForwardIcon from '@material-ui/icons/AccessibleForward';
 import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly';

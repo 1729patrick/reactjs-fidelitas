@@ -24,7 +24,8 @@ import {
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useHistory } from 'react-router-dom';
-import { Palette } from '../../utils/palette';
+import { Palette } from '../../utils/Palette';
+import { useAuth } from '../../contexts/Auth';
 
 function Copyright() {
   return (
@@ -79,11 +80,22 @@ const LoginView = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
+  const { login } = useAuth();
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    history.push('/clients');
+    const user = await login({
+      email: email,
+      password: password,
+      type: 'admin',
+    });
+
+    if (user) {
+      history.push('/clients');
+    } else {
+      console.log('ups');
+    }
   };
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {

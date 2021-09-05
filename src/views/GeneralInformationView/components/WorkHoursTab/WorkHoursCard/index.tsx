@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 import TimePicker from 'react-time-picker';
 import WorkHoursModal from '../WorkHoursModal';
-import { Palette } from '../../../../../utils/palette';
+import { Palette } from '../../../../../utils/Palette';
 
 const WorkHoursCard = () => {
   const [checked, setChecked] = useState([0, 0, 0, 0, 0, 0, 0]);

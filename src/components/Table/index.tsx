@@ -24,7 +24,7 @@ import Paper from '@material-ui/core/Paper';
 import { Box, Button, Typography } from '@material-ui/core';
 import ConfigModal from '../../views/ReservesView/components/ConfigModal';
 
-import { Palette } from '../../utils/palette';
+import { Palette } from '../../utils/Palette';
 import { translations } from '../Drawer';
 import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserveModal';
 import ConfirmDialog from '../ConfirmDialog';
@@ -106,7 +106,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <TableCell
             key={f.id}
             align={'left'}
-            padding={f.disablePadding ? 'none' : 'default'}
+            padding={'default'}
             sortDirection={orderBy === f.id ? order : false}>
             <TableSortLabel
               active={orderBy === f.id}
@@ -228,12 +228,12 @@ const ResponsiveTable: React.FC<Props> = ({
   const cellRenderByType = (type: string, value: any) => {
     if (type === 'boolean') {
       return booleanToString(value);
-    } else if (type === 'object') {
+    } else if (type === 'date') {
       return format(value, 'yyyy/MM/dd');
-    } else if (type === 'string' && value.includes('base64')) {
-      return <img src={value} style={{ width: 50, height: 50 }} />;
+    } else if (type === 'file' && value.url) {
+      return <img src={value.url} style={{ width: 50, height: 50 }} />;
     } else {
-      return value;
+      return <p>{value}</p>;
     }
   };
 
@@ -363,14 +363,11 @@ const ResponsiveTable: React.FC<Props> = ({
                 .map((d: any) => {
                   return (
                     <TableRow hover tabIndex={-1} key={d.id}>
-                      {Object.keys(d).map(
-                        (value, i) =>
-                          i !== 0 && (
-                            <TableCell align={'left'} key={i}>
-                              {cellRenderByType(typeof d[value], d[value])}
-                            </TableCell>
-                          ),
-                      )}
+                      {fields.map((value: any, i: number) => (
+                        <TableCell align={'left'} key={i}>
+                          {cellRenderByType(value.type, d[value.id])}
+                        </TableCell>
+                      ))}
 
                       {actions && (
                         <TableCell align={'left'}>

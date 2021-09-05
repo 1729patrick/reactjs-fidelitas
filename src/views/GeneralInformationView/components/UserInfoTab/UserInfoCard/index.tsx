@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Box, Button, Card, Typography } from '@material-ui/core';
-import { Palette } from '../../../../../utils/palette';
+import { Palette } from '../../../../../utils/Palette';
 import { translations } from '../../../../../components/Drawer';
 import CreateUpdateModal from '../../../../../components/CreateUpdateModal';
 

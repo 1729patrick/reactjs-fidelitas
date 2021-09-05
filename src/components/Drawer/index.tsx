@@ -40,8 +40,9 @@ import {
   MenuProps,
   withStyles,
 } from '@material-ui/core';
-import { Palette } from '../../utils/palette';
+import { Palette } from '../../utils/Palette';
 import Link from '@material-ui/core/Link';
+import { useAuth } from '../../contexts/Auth';
 
 const drawerWidth = 240;
 
@@ -126,6 +127,8 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
   const location = useLocation();
+  const { logout } = useAuth();
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -143,6 +146,7 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
   };
 
   const handleLogin = () => {
+    logout();
     history.push('/');
   };
 
