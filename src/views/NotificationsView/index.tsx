@@ -1,6 +1,7 @@
 import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
+import { useNotifications } from '../../api/useNotifications';
 
 const notificationData = [
   {
@@ -44,7 +45,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'message',
+    id: 'description',
     numeric: true,
     disablePadding: false,
     label: 'Mensagem',
@@ -52,33 +53,30 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'color',
+    id: 'type',
     numeric: true,
     disablePadding: false,
-    label: 'Cor',
+    label: 'Tipo',
     type: 'text',
     isEditable: true,
-  },
-  {
-    id: 'createdAt',
-    numeric: false,
-    disablePadding: false,
-    label: 'Criado em',
-    type: 'date',
-    isEditable: false,
   },
 ];
 
 const NotificationsView = () => {
+  const notifications = useNotifications();
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={notificationData}
-        fields={headCells}
-        actions={true}
-        title={'Notificação'}
-        notifications={true}
-      />
+      {notifications.notifications ? (
+        <ResponsiveTable
+          data={notifications.notifications}
+          fields={headCells}
+          actions={true}
+          title={'Notificação'}
+          notifications={true}
+        />
+      ) : (
+        <></>
+      )}
     </ResponsiveDrawer>
   );
 };

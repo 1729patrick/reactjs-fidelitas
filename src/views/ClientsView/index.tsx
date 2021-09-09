@@ -1,6 +1,7 @@
 import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
+import { useClients } from '../../api/useClients';
 
 const clientsData = [
   {
@@ -113,15 +114,21 @@ const headCells: HeadCell[] = [
 ];
 
 const ClientsView = () => {
+  const clients = useClients();
+
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={clientsData}
-        fields={headCells}
-        actions={true}
-        title={'Cliente'}
-        clients={true}
-      />
+      {clients.clients ? (
+        <ResponsiveTable
+          data={clients.clients}
+          fields={headCells}
+          actions={true}
+          title={'Cliente'}
+          clients={true}
+        />
+      ) : (
+        <></>
+      )}
     </ResponsiveDrawer>
   );
 };

@@ -229,9 +229,12 @@ const ResponsiveTable: React.FC<Props> = ({
     if (type === 'boolean') {
       return booleanToString(value);
     } else if (type === 'date') {
-      return format(value, 'yyyy/MM/dd');
+      //console.log('value', format(value, 'yyyy/MM/dd'));
+      return <p>{value.split('T')[0]}</p>;
     } else if (type === 'file' && value.url) {
       return <img src={value.url} style={{ width: 50, height: 50 }} />;
+    } else if (type === 'time') {
+      return <p>{value.toString()}</p>;
     } else {
       return <p>{value}</p>;
     }

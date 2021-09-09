@@ -1,6 +1,7 @@
 import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
+import { useAchievements } from '../../api/useAchievements';
 
 const discountsData = [
   {
@@ -63,7 +64,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'trophy',
+    id: 'reward',
     numeric: false,
     disablePadding: false,
     label: 'Prémio',
@@ -71,22 +72,22 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'costPoints',
+    id: 'cost',
     numeric: true,
     disablePadding: false,
-    label: 'Custo em pontos',
+    label: 'Custo ',
     type: 'number',
     isEditable: true,
   },
   {
-    id: 'costVisits',
+    id: 'rewardValue',
     numeric: true,
     disablePadding: false,
-    label: 'Custo em visitas',
+    label: 'Valor do custo',
     type: 'number',
     isEditable: true,
   },
-  {
+  /*  {
     id: 'isActive',
     numeric: false,
     disablePadding: false,
@@ -109,18 +110,24 @@ const headCells: HeadCell[] = [
     label: 'Criado em',
     type: 'number',
     isEditable: false,
-  },
+  },*/
 ];
 
 const DiscountsView = () => {
+  const achievements = useAchievements();
+  console.log('achievements', achievements);
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={discountsData}
-        fields={headCells}
-        actions={true}
-        title={'Desconto'}
-      />
+      {achievements.achievements ? (
+        <ResponsiveTable
+          data={achievements.achievements}
+          fields={headCells}
+          actions={true}
+          title={'Desconto'}
+        />
+      ) : (
+        <></>
+      )}
     </ResponsiveDrawer>
   );
 };

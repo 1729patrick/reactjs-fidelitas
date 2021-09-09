@@ -1,6 +1,7 @@
 import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
+import { useReservations } from '../../api/useReservations';
 
 const RESERVE_STATE = {
   CONFIRMED: 'confirmada',
@@ -64,7 +65,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'numberOfAdults',
+    id: 'adults',
     numeric: true,
     disablePadding: false,
     label: 'Nº de adultos',
@@ -72,7 +73,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'numberOfKids',
+    id: 'kids',
     numeric: true,
     disablePadding: false,
     label: 'Nº de crianças',
@@ -80,7 +81,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'numberOfBabies',
+    id: 'babies',
     numeric: true,
     disablePadding: false,
     label: 'Nº de bebés',
@@ -88,7 +89,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'hours',
+    id: 'time',
     numeric: true,
     disablePadding: false,
     label: 'Horas',
@@ -103,7 +104,7 @@ const headCells: HeadCell[] = [
     type: 'date',
     isEditable: true,
   },
-  {
+  /* {
     id: 'reserveState',
     numeric: false,
     disablePadding: false,
@@ -118,18 +119,24 @@ const headCells: HeadCell[] = [
     label: 'Criado em',
     type: 'date',
     isEditable: false,
-  },
+  },*/
 ];
 const ReservesView = () => {
+  const reservations = useReservations();
+  console.log('reservations', reservations);
   return (
     <ResponsiveDrawer>
-      <ResponsiveTable
-        data={reservesData}
-        fields={headCells}
-        actions={true}
-        title={'Reserva'}
-        reserve={true}
-      />
+      {reservations.reservations ? (
+        <ResponsiveTable
+          data={reservations.reservations}
+          fields={headCells}
+          actions={true}
+          title={'Reserva'}
+          reserve={true}
+        />
+      ) : (
+        <></>
+      )}
     </ResponsiveDrawer>
   );
 };

@@ -122,7 +122,7 @@ const ProductsView = () => {
           title={'Produtos'}
         />
       ) : (
-        <div>ola</div>
+        <></>
       )}
     </ResponsiveDrawer>
   );
