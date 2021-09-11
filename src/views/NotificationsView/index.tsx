@@ -64,6 +64,7 @@ const headCells: HeadCell[] = [
 
 const NotificationsView = () => {
   const notifications = useNotifications();
+  console.log('notification', notifications.notifications);
   return (
     <ResponsiveDrawer>
       {notifications.notifications ? (

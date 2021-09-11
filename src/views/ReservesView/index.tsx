@@ -57,7 +57,7 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   {
-    id: 'name',
+    id: 'firstName',
     numeric: false,
     disablePadding: false,
     label: 'Nome',

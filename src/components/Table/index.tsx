@@ -167,6 +167,7 @@ type Props = {
   notifications?: boolean;
   reserve?: boolean;
   clients?: boolean;
+  onSubmit?: (obj: any) => void;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
@@ -177,6 +178,7 @@ const ResponsiveTable: React.FC<Props> = ({
   notifications = false,
   reserve = false,
   clients = false,
+  onSubmit,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -191,6 +193,8 @@ const ResponsiveTable: React.FC<Props> = ({
     title: '',
     text: '',
   });
+
+  const [actionTitle, setActionTitle] = useState('');
 
   const [page, setPage] = React.useState(0);
 
@@ -231,7 +235,7 @@ const ResponsiveTable: React.FC<Props> = ({
     } else if (type === 'date') {
       //console.log('value', format(value, 'yyyy/MM/dd'));
       return <p>{value.split('T')[0]}</p>;
-    } else if (type === 'file' && value.url) {
+    } else if ((type === 'file' || type === 'image') && value.url) {
       return <img src={value.url} style={{ width: 50, height: 50 }} />;
     } else if (type === 'time') {
       return <p>{value.toString()}</p>;
@@ -240,10 +244,19 @@ const ResponsiveTable: React.FC<Props> = ({
     }
   };
 
-  const handleModal = (data?: any) => {
+  const handleModal = (title?: string, data?: any) => {
     //useRef para transportar dados se existirem para dentro dos fields do modal
     if (data) {
       modalDataRef.current = data;
+    }
+    setActionTitle(title ? title : '');
+
+    //If will add something, here we clean the ref for be sure the inputs will be clean
+    if (!openModal && title === 'Adicionar') {
+      if (modalDataRef) {
+        // @ts-ignore
+        modalDataRef.current = {};
+      }
     }
 
     setOpenModal(!openModal);
@@ -292,7 +305,7 @@ const ResponsiveTable: React.FC<Props> = ({
               boxShadow: 'none',
             }}
             variant="contained"
-            onClick={handleModal}>
+            onClick={() => handleModal('Adicionar')}>
             Adicionar {title}
           </Button>
         )}
@@ -335,6 +348,8 @@ const ResponsiveTable: React.FC<Props> = ({
                 fields={fields}
                 title={title}
                 dataRef={modalDataRef}
+                actionTitle={actionTitle}
+                onSubmit={onSubmit}
               />
             )}
             {openConfigModal && (
@@ -342,7 +357,7 @@ const ResponsiveTable: React.FC<Props> = ({
             )}
             {openAnswerReserveModal && (
               <AnswerReserveModal
-                handleCloseModal={handleAnswerReserveModal}
+                handleCloseModal={() => handleAnswerReserveModal()}
                 dataRef={modalDataRef}
               />
             )}
@@ -429,7 +444,7 @@ const ResponsiveTable: React.FC<Props> = ({
                               <>
                                 <IconButton
                                   aria-label="edit"
-                                  onClick={() => handleModal(d)}
+                                  onClick={() => handleModal('Editar', d)}
                                   style={
                                     !notifications && !reserve && !clients
                                       ? { marginLeft: '-28px' }

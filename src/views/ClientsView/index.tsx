@@ -2,6 +2,7 @@ import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
 import { useClients } from '../../api/useClients';
+import api from '../../utils/Api';
 
 const clientsData = [
   {
@@ -72,7 +73,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'phoneNumber',
+    id: 'phone',
     numeric: true,
     disablePadding: false,
     label: 'Contacto',

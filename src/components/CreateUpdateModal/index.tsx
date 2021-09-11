@@ -19,6 +19,9 @@ import {
 } from '@material-ui/pickers';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import DateFnsUtils from '@date-io/date-fns';
+import api from '../../utils/Api';
+import { useAuth } from '../../contexts/Auth';
+import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +57,8 @@ type Props = {
   fields: any;
   title?: string;
   dataRef?: any;
+  actionTitle?: string;
+  onSubmit?: (obj: any) => void;
 };
 
 const CreateUpdateModal: React.FC<Props> = ({
@@ -62,6 +67,8 @@ const CreateUpdateModal: React.FC<Props> = ({
   fields,
   title,
   dataRef,
+  actionTitle,
+  onSubmit,
 }) => {
   const classes = useStyles();
 
@@ -70,12 +77,14 @@ const CreateUpdateModal: React.FC<Props> = ({
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>();
   const [selectedTime, setSelectedTime] = useState<Date | null>();
+  const { user } = useAuth();
   /**
    * TO handle the data
    */
   useEffect(() => {
-    if (dataRef) {
-      setSelectedDate(dataRef.current[0]);
+    if (dataRef.current) {
+      console.log(dataRef);
+      //setSelectedDate(dataRef.current[0]);
     }
   }, []);
 
@@ -89,12 +98,18 @@ const CreateUpdateModal: React.FC<Props> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormControl({
       ...formControl,
-      [event.target.name]: event.target.value,
+      [event.target.name]:
+        event.target.name === 'image' && event.target.files
+          ? event.target.files[0]
+          : event.target.value,
     });
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    if (onSubmit) {
+      onSubmit(formControl);
+    }
   };
 
   return (
@@ -111,12 +126,14 @@ const CreateUpdateModal: React.FC<Props> = ({
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <h1>Editar {title}</h1>
+          <h1>
+            {actionTitle} {title}
+          </h1>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
-            onClick={handleCloseModal}>
+            onClick={() => handleCloseModal()}>
             <HighlightOffIcon fontSize={'large'} />
           </IconButton>
         </div>
@@ -138,13 +155,20 @@ const CreateUpdateModal: React.FC<Props> = ({
                   fullWidth
                   id={field.id}
                   type={field.type}
-                  value={formControl[field.id]}
+                  value={(formControl && formControl[field.id]) || ''}
                   name={field.id}
                   onChange={handleChange}
                   label={field.label}
                   autoComplete={field.type}
-                  multiline
-                  autoFocus
+                  multiline={field.type === 'text'}
+                  inputProps={{ min: field.id === 'price' && 0 }}
+                  InputProps={{
+                    endAdornment: field.id === 'price' && (
+                      <InputAdornment position={'end'}>
+                        <EuroSymbolIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               );
 
@@ -215,13 +239,17 @@ const CreateUpdateModal: React.FC<Props> = ({
               );
             */
             }
-            if (field.isEditable && field.type === 'file') {
+            if (
+              field.isEditable &&
+              (field.type === 'file' || field.type === 'image')
+            ) {
               return (
                 <>
                   <InputLabel
                     style={{
                       color: '0,0,0,0.54',
                       paddingLeft: 8,
+
                       fontSize: '0.8rem',
                       fontFamily: 'Helvetica',
                       fontWeight: 400,
@@ -234,19 +262,18 @@ const CreateUpdateModal: React.FC<Props> = ({
                   <FormControl
                     className={clsx(classes.margin, classes.textField)}
                     key={index}>
-                    <img
-                      src={formControl[field.id]}
-                      style={{ width: 50, height: 50 }}
-                    />
-                    <InputLabel htmlFor={field.id}>
-                      <AddPhotoAlternateIcon />
-                    </InputLabel>
+                    {formControl && formControl[field.id] && (
+                      <img
+                        src={formControl[field.id]}
+                        style={{ width: 50, height: 50 }}
+                      />
+                    )}
                     <Input
                       id={field.id}
-                      type={field.type}
+                      type={'file'}
                       name={field.id}
                       onChange={handleChange}
-                      style={{ display: 'none' }}
+                      style={{ borderStyle: 'none', borderBottom: 0 }}
                     />
                   </FormControl>
                 </>
@@ -265,7 +292,7 @@ const CreateUpdateModal: React.FC<Props> = ({
               color="primary"
               style={{ marginLeft: '5px' }}
               type="submit">
-              Editar
+              {actionTitle}
             </Button>
           </div>
         </form>

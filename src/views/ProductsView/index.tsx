@@ -2,6 +2,7 @@ import ResponsiveDrawer from '../../components/Drawer';
 import React, { useEffect } from 'react';
 import ResponsiveTable from '../../components/Table';
 import { useProducts } from '../../api/useProducts';
+import api from '../../utils/Api';
 
 const productsData = [
   {
@@ -56,7 +57,7 @@ const headCells: HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Imagem',
-    type: 'file',
+    type: 'image',
     isEditable: true,
   },
   {
@@ -111,7 +112,25 @@ const headCells: HeadCell[] = [
 
 const ProductsView = () => {
   const products = useProducts();
+  const onSubmit = async (formControl: any) => {
+    let formData = new FormData();
 
+    formData.append('type', 'product');
+    formData.append('file', formControl['image']);
+    const res = await api.post('/files/upload', formData);
+
+    console.log(res);
+    /*api.put('/products/add', {
+      description: formControl['description'],
+      allergens: formControl['allergens'],
+      ingredients: formControl['ingredients'],
+      title: formControl['title'],
+      type: formControl['type'],
+      price: parseInt(formControl['price']),
+      restaurantId: 1,
+      imageId: image.id,
+    });*/
+  };
   return (
     <ResponsiveDrawer>
       {products.products ? (
@@ -120,6 +139,7 @@ const ProductsView = () => {
           fields={headCells}
           actions={true}
           title={'Produtos'}
+          onSubmit={onSubmit}
         />
       ) : (
         <></>
