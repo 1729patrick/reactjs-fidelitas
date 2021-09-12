@@ -57,7 +57,7 @@ const headCells: HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: 'Tipo',
-    type: 'text',
+    type: 'select',
     isEditable: true,
   },
 ];

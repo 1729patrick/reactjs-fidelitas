@@ -10,6 +10,7 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  MenuItem,
   TextField,
 } from '@material-ui/core';
 import {
@@ -22,6 +23,17 @@ import DateFnsUtils from '@date-io/date-fns';
 import api from '../../utils/Api';
 import { useAuth } from '../../contexts/Auth';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+
+const notificationsType = ['email', 'pushNotification', 'sms'];
+const productsType = [
+  'starter',
+  'main',
+  'dessert',
+  'salad',
+  'side',
+  'drink',
+  'special',
+];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -148,7 +160,6 @@ const CreateUpdateModal: React.FC<Props> = ({
               field.isEditable &&
               (field.type === 'text' ||
                 field.type === 'number' ||
-                field.type === 'checkbox' ||
                 field.type === 'email')
             ) {
               return (
@@ -176,8 +187,43 @@ const CreateUpdateModal: React.FC<Props> = ({
                   }}
                 />
               );
-
-              /* Inputs !== text field
+            }
+            if (field.type === 'select') {
+              return (
+                <TextField
+                  key={index}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id={field.id}
+                  type={field.type}
+                  value={(formControl && formControl[field.id]) || ''}
+                  name={field.id}
+                  onChange={handleChange}
+                  label={field.label}
+                  autoComplete={field.type}
+                  select>
+                  {field.id === 'type' &&
+                    field.label === 'Tipo' &&
+                    notificationsType.map(
+                      (notificationType: string, index: number) => (
+                        <MenuItem key={index} value={notificationType}>
+                          {notificationType}
+                        </MenuItem>
+                      ),
+                    )}
+                  {field.id === 'type' &&
+                    field.label === 'Menu' &&
+                    productsType.map((productType: string, index: number) => (
+                      <MenuItem key={index} value={productType}>
+                        {productType}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              );
+            }
+            /* Inputs !== text field
                               return (
                                 <FormControl
                                   className={clsx(classes.margin, classes.textField)}
@@ -204,7 +250,6 @@ const CreateUpdateModal: React.FC<Props> = ({
                 </FormControl>
               );
             */
-            }
             if (
               field.isEditable &&
               (field.type === 'date' || field.type === 'time')

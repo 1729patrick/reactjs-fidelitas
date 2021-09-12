@@ -98,7 +98,7 @@ const headCells: HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Menu',
-    type: 'text',
+    type: 'select',
     isEditable: true,
   },
   {
