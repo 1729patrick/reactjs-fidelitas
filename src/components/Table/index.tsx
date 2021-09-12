@@ -167,7 +167,7 @@ type Props = {
   notifications?: boolean;
   reserve?: boolean;
   clients?: boolean;
-  onSubmit?: (obj: any) => void;
+  onSubmit?: (obj: any) => Promise<boolean>;
 };
 
 const ResponsiveTable: React.FC<Props> = ({

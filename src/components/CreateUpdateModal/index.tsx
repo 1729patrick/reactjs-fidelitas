@@ -58,7 +58,7 @@ type Props = {
   title?: string;
   dataRef?: any;
   actionTitle?: string;
-  onSubmit?: (obj: any) => void;
+  onSubmit?: (obj: any) => Promise<boolean>;
 };
 
 const CreateUpdateModal: React.FC<Props> = ({
@@ -105,10 +105,15 @@ const CreateUpdateModal: React.FC<Props> = ({
     });
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (onSubmit) {
-      onSubmit(formControl);
+      const result = await onSubmit(formControl);
+      if (result) {
+        handleCloseModal();
+      } else {
+        console.log('errou');
+      }
     }
   };
 

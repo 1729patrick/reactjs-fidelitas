@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import ResponsiveTable from '../../components/Table';
 import { useProducts } from '../../api/useProducts';
 import api from '../../utils/Api';
+import { useAuth } from '../../contexts/Auth';
 
 const productsData = [
   {
@@ -112,6 +113,8 @@ const headCells: HeadCell[] = [
 
 const ProductsView = () => {
   const products = useProducts();
+  const { user } = useAuth();
+  console.log('user', user);
   const onSubmit = async (formControl: any) => {
     let formData = new FormData();
 
@@ -119,8 +122,7 @@ const ProductsView = () => {
     formData.append('file', formControl['image']);
     const res = await api.post('/files/upload', formData);
 
-    console.log(res);
-    /*api.put('/products/add', {
+    const product = await api.put('/products/add', {
       description: formControl['description'],
       allergens: formControl['allergens'],
       ingredients: formControl['ingredients'],
@@ -128,8 +130,15 @@ const ProductsView = () => {
       type: formControl['type'],
       price: parseInt(formControl['price']),
       restaurantId: 1,
-      imageId: image.id,
-    });*/
+      imageId: res.data.id,
+    });
+    console.log('product', product);
+
+    if (product.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
   };
   return (
     <ResponsiveDrawer>
