@@ -168,6 +168,7 @@ type Props = {
   reserve?: boolean;
   clients?: boolean;
   onSubmit?: (obj: any) => Promise<boolean>;
+  onDelete?: (obj: any) => Promise<boolean>;
 };
 
 const ResponsiveTable: React.FC<Props> = ({
@@ -179,6 +180,7 @@ const ResponsiveTable: React.FC<Props> = ({
   reserve = false,
   clients = false,
   onSubmit,
+  onDelete,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -287,6 +289,7 @@ const ResponsiveTable: React.FC<Props> = ({
     if (title && text) {
       setConfirmDialogContent({ title: title, text: text });
     }
+
     setOpenConfirmDialog(!openConfirmDialog);
   };
 
@@ -367,14 +370,7 @@ const ResponsiveTable: React.FC<Props> = ({
                 handleCloseModal={handleSendNotificationModal}
               />
             )}
-            {openConfirmDialog && (
-              <ConfirmDialog
-                title={confirmDialogContent.title}
-                text={confirmDialogContent.text}
-                open={openConfirmDialog}
-                handleClose={handleConfirmDialog}
-              />
-            )}
+
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -386,6 +382,14 @@ const ResponsiveTable: React.FC<Props> = ({
                           {cellRenderByType(value.type, d[value.id])}
                         </TableCell>
                       ))}
+                      {openConfirmDialog && (
+                        <ConfirmDialog
+                          title={confirmDialogContent.title}
+                          text={confirmDialogContent.text}
+                          open={openConfirmDialog}
+                          handleClose={handleConfirmDialog}
+                        />
+                      )}
 
                       {actions && (
                         <TableCell align={'left'}>
@@ -453,7 +457,9 @@ const ResponsiveTable: React.FC<Props> = ({
                                   <EditIcon />
                                 </IconButton>
 
-                                <IconButton aria-label="delete">
+                                <IconButton
+                                  aria-label="delete"
+                                  onClick={() => onDelete && onDelete(d.id)}>
                                   <DeleteIcon />
                                 </IconButton>
                               </>

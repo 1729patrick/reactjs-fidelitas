@@ -2,6 +2,8 @@ import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
 import { useAchievements } from '../../api/useAchievements';
+import api from '../../utils/Api';
+import { useSWRConfig } from 'swr';
 
 const discountsData = [
   {
@@ -72,6 +74,14 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
+    id: 'type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Tipo de Prémio',
+    type: 'select',
+    isEditable: true,
+  },
+  {
     id: 'cost',
     numeric: true,
     disablePadding: false,
@@ -115,7 +125,36 @@ const headCells: HeadCell[] = [
 
 const DiscountsView = () => {
   const achievements = useAchievements();
-  console.log('achievements', achievements);
+  const { mutate } = useSWRConfig();
+
+  const onSubmit = async (formControl: any) => {
+    const achievement = await api.put('/achievements/add', {
+      title: formControl['title'],
+      description: formControl['description'],
+      type: formControl['type'],
+      reward: formControl['reward'],
+      rewardValue: parseFloat(formControl['rewardValue']),
+      cost: parseFloat(formControl['cost']),
+    });
+
+    if (achievement.status === 200) {
+      mutate('/achievements');
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const onDelete = async (id: number) => {
+    const achievement = await api.delete(`/achievements/${id}`);
+    if (achievement.status === 200) {
+      mutate('/achievements');
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <ResponsiveDrawer>
       {achievements.achievements ? (
@@ -124,6 +163,8 @@ const DiscountsView = () => {
           fields={headCells}
           actions={true}
           title={'Desconto'}
+          onSubmit={onSubmit}
+          onDelete={onDelete}
         />
       ) : (
         <></>

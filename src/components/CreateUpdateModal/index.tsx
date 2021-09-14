@@ -25,6 +25,7 @@ import { useAuth } from '../../contexts/Auth';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 
 const notificationsType = ['email', 'pushNotification', 'sms'];
+const achievementsType = ['cash', 'product', 'discount'];
 const productsType = [
   'starter',
   'main',
@@ -220,6 +221,15 @@ const CreateUpdateModal: React.FC<Props> = ({
                         {productType}
                       </MenuItem>
                     ))}
+                  {field.id === 'type' &&
+                    field.label === 'Tipo de Prémio' &&
+                    achievementsType.map(
+                      (achievementType: string, index: number) => (
+                        <MenuItem key={index} value={achievementType}>
+                          {achievementType}
+                        </MenuItem>
+                      ),
+                    )}
                 </TextField>
               );
             }

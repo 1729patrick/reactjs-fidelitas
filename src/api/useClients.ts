@@ -1,7 +1,7 @@
 import { useFetch } from '../hooks/useFetch';
 
 export function useClients() {
-  const { data, error, isLoading } = useFetch(`/user/restaurantUsers`);
+  const { data, error, isLoading } = useFetch(`/restaurants/users`);
 
   return {
     clients: data,

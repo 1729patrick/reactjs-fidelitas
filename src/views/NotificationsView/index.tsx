@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
 import { useNotifications } from '../../api/useNotifications';
+import api from '../../utils/Api';
+import { useSWRConfig } from 'swr';
 
 const notificationData = [
   {
@@ -65,6 +67,34 @@ const headCells: HeadCell[] = [
 const NotificationsView = () => {
   const notifications = useNotifications();
   console.log('notification', notifications.notifications);
+  const { mutate } = useSWRConfig();
+
+  const onSubmit = async (formControl: any) => {
+    const notification = await api.put('/restaurants/notifications/add', {
+      title: formControl['title'],
+      description: formControl['description'],
+      type: formControl['type'],
+    });
+    console.log('product', notification);
+
+    if (notification.status === 200) {
+      mutate('/restaurants/notifications');
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const onDelete = async (id: number) => {
+    const achievement = await api.delete(`/restaurants/notifications/${id}`);
+    if (achievement.status === 200) {
+      mutate('/restaurants/notifications');
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <ResponsiveDrawer>
       {notifications.notifications ? (
@@ -74,6 +104,8 @@ const NotificationsView = () => {
           actions={true}
           title={'Notificação'}
           notifications={true}
+          onSubmit={onSubmit}
+          onDelete={onDelete}
         />
       ) : (
         <></>

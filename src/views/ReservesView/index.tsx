@@ -2,6 +2,8 @@ import React from 'react';
 import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
 import { useReservations } from '../../api/useReservations';
+import api from '../../utils/Api';
+import { useSWRConfig } from 'swr';
 
 const RESERVE_STATE = {
   CONFIRMED: 'confirmada',
@@ -62,7 +64,7 @@ const headCells: HeadCell[] = [
     disablePadding: false,
     label: 'Nome',
     type: 'text',
-    isEditable: true,
+    isEditable: false,
   },
   {
     id: 'adults',
@@ -123,7 +125,25 @@ const headCells: HeadCell[] = [
 ];
 const ReservesView = () => {
   const reservations = useReservations();
+  const { mutate } = useSWRConfig();
+
   console.log('reservations', reservations);
+  const onSubmit = async (formControl: any) => {
+    const achievement = await api.put('/user/reservations', {
+      date: formControl['date'],
+      time: formControl['time'],
+      adults: formControl['adults'],
+      kids: formControl['kids'],
+      babies: formControl['babies'],
+    });
+
+    if (achievement.status === 200) {
+      mutate('/user/reservations');
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <ResponsiveDrawer>
       {reservations.reservations ? (

@@ -4,6 +4,7 @@ import ResponsiveTable from '../../components/Table';
 import { useProducts } from '../../api/useProducts';
 import api from '../../utils/Api';
 import { useAuth } from '../../contexts/Auth';
+import { useSWRConfig } from 'swr';
 
 const productsData = [
   {
@@ -113,6 +114,8 @@ const headCells: HeadCell[] = [
 
 const ProductsView = () => {
   const products = useProducts();
+  const { mutate } = useSWRConfig();
+
   const { user } = useAuth();
   console.log('user', user);
   const onSubmit = async (formControl: any) => {
@@ -135,11 +138,23 @@ const ProductsView = () => {
     console.log('product', product);
 
     if (product.status === 200) {
+      mutate('/products');
       return true;
     } else {
       return false;
     }
   };
+
+  const onDelete = async (id: number) => {
+    const achievement = await api.delete(`/products/${id}`);
+    if (achievement.status === 200) {
+      mutate('/products');
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <ResponsiveDrawer>
       {products.products ? (
@@ -149,6 +164,7 @@ const ProductsView = () => {
           actions={true}
           title={'Produtos'}
           onSubmit={onSubmit}
+          onDelete={onDelete}
         />
       ) : (
         <></>

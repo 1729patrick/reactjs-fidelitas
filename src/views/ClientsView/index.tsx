@@ -3,6 +3,7 @@ import ResponsiveDrawer from '../../components/Drawer';
 import ResponsiveTable from '../../components/Table';
 import { useClients } from '../../api/useClients';
 import api from '../../utils/Api';
+import { useSWRConfig } from 'swr';
 
 const clientsData = [
   {
@@ -81,15 +82,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'points',
-    numeric: true,
-    disablePadding: false,
-    label: 'Pontos',
-    type: 'number',
-    isEditable: true,
-  },
-  {
-    id: 'numberOfVisits',
+    id: 'visits',
     numeric: true,
     disablePadding: false,
     label: 'Numbero de visitas',
@@ -97,7 +90,7 @@ const headCells: HeadCell[] = [
     isEditable: false,
   },
   {
-    id: 'expense',
+    id: 'totalPurchases',
     numeric: true,
     disablePadding: false,
     label: 'Despesa',
@@ -116,6 +109,17 @@ const headCells: HeadCell[] = [
 
 const ClientsView = () => {
   const clients = useClients();
+  const { mutate } = useSWRConfig();
+
+  const onDelete = async (id: number) => {
+    const achievement = await api.delete(`/restaurants/users/${id}`);
+    if (achievement.status === 200) {
+      mutate('/restaurants/users');
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <ResponsiveDrawer>
@@ -126,6 +130,7 @@ const ClientsView = () => {
           actions={true}
           title={'Cliente'}
           clients={true}
+          onDelete={onDelete}
         />
       ) : (
         <></>
