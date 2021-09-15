@@ -12,8 +12,8 @@ import ProductsView from './ProductsView';
 import { useAuth } from '../contexts/Auth';
 
 export default function App() {
-  const { token } = useAuth();
-  if (!token) {
+  const { userLoaded } = useAuth();
+  if (!userLoaded) {
     return <p>...loading</p>;
   }
 

@@ -1,4 +1,10 @@
-import React from 'react';
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,53 +14,70 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-type PropsType = {
-  title: string;
-  text: string;
-  open: boolean;
-  handleClose: () => void;
-  handleSubmit?: () => void;
+export type DialogHandler = {
+  open: (title: string, text: string, action: () => void) => void;
 };
 
-const ConfirmDialog: React.FC<PropsType> = ({
-  title,
-  text,
-  open,
-  handleClose,
-  handleSubmit,
-}) => {
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+type PropsType = {};
 
-  const handleConfirmation = () => {
-    handleClose();
-    if (handleSubmit) {
-      handleSubmit();
-    }
-  };
+const ConfirmDialog: React.ForwardRefRenderFunction<DialogHandler, PropsType> =
+  (props, ref) => {
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [visible, setVisible] = useState(false);
+    const [confirmDialog, setConfirmDialog] = useState({
+      title: '',
+      text: '',
+      action: () => {},
+    });
 
-  return (
-    <div>
+    const open = useCallback(
+      (title: string, text: string, action: () => void) => {
+        setVisible(true);
+        setConfirmDialog({ title: title, text: text, action: action });
+      },
+      [setVisible, setConfirmDialog],
+    );
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        open,
+      }),
+      [visible],
+    );
+
+    const handleClose = () => {
+      setVisible(false);
+    };
+
+    const handleConfirm = () => {
+      confirmDialog.action();
+      setVisible(false);
+    };
+
+    return (
       <Dialog
         fullScreen={fullScreen}
-        open={open}
+        open={visible}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title">
-        <DialogTitle id="responsive-dialog-title">{title}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">
+          {confirmDialog.title}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>{text}</DialogContentText>
+          <DialogContentText>{confirmDialog.text}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Cancelar
           </Button>
-          <Button onClick={handleConfirmation} color="primary" autoFocus>
+          <Button onClick={handleConfirm} color="primary" autoFocus>
             Confirmar
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  );
-};
+    );
+  };
 
-export default ConfirmDialog;
+export default memo(forwardRef(ConfirmDialog));

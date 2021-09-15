@@ -27,7 +27,7 @@ import ConfigModal from '../../views/ReservesView/components/ConfigModal';
 import { Palette } from '../../utils/Palette';
 import { translations } from '../Drawer';
 import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserveModal';
-import ConfirmDialog from '../ConfirmDialog';
+import ConfirmDialog, { DialogHandler } from '../ConfirmDialog';
 import NotificationModal from '../../views/ClientsView/components/NotificationModal';
 
 interface Data {
@@ -190,11 +190,8 @@ const ResponsiveTable: React.FC<Props> = ({
   const [openAnswerReserveModal, setOpenAnswerReserveModal] = useState(false);
   const [openSendNotificationModal, setOpenSendNotificationModal] =
     useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [confirmDialogContent, setConfirmDialogContent] = useState({
-    title: '',
-    text: '',
-  });
+
+  const confirmDialogContent = useRef<DialogHandler>(null);
 
   const [actionTitle, setActionTitle] = useState('');
 
@@ -285,14 +282,6 @@ const ResponsiveTable: React.FC<Props> = ({
     setOpenAnswerReserveModal(!openAnswerReserveModal);
   };
 
-  const handleConfirmDialog = (title?: string, text?: string) => {
-    if (title && text) {
-      setConfirmDialogContent({ title: title, text: text });
-    }
-
-    setOpenConfirmDialog(!openConfirmDialog);
-  };
-
   return (
     <div className={classes.root}>
       <Box display="flex" mb={3} mt={3} justifyContent="space-between">
@@ -371,6 +360,8 @@ const ResponsiveTable: React.FC<Props> = ({
               />
             )}
 
+            <ConfirmDialog ref={confirmDialogContent} />
+
             <TableBody>
               {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -382,14 +373,6 @@ const ResponsiveTable: React.FC<Props> = ({
                           {cellRenderByType(value.type, d[value.id])}
                         </TableCell>
                       ))}
-                      {openConfirmDialog && (
-                        <ConfirmDialog
-                          title={confirmDialogContent.title}
-                          text={confirmDialogContent.text}
-                          open={openConfirmDialog}
-                          handleClose={handleConfirmDialog}
-                        />
-                      )}
 
                       {actions && (
                         <TableCell align={'left'}>
@@ -413,12 +396,7 @@ const ResponsiveTable: React.FC<Props> = ({
                               <>
                                 <IconButton
                                   aria-label="confirm"
-                                  onClick={() =>
-                                    handleConfirmDialog(
-                                      'Confirmação',
-                                      'Pretende aceitar o pedido de reserva?',
-                                    )
-                                  }>
+                                  onClick={() => {}}>
                                   <CheckCircleIcon />
                                 </IconButton>
                                 <IconButton
@@ -435,9 +413,10 @@ const ResponsiveTable: React.FC<Props> = ({
                                 <IconButton
                                   aria-label="decline"
                                   onClick={() =>
-                                    handleConfirmDialog(
-                                      'Confirmação',
-                                      'Pretende rejeitar o pedido de reserva?',
+                                    confirmDialogContent.current?.open(
+                                      'Recusar reserva',
+                                      'Tem a certeza que deseja recusar o pedido de reserva?',
+                                      () => {},
                                     )
                                   }>
                                   <NotInterestedIcon />
@@ -459,7 +438,13 @@ const ResponsiveTable: React.FC<Props> = ({
 
                                 <IconButton
                                   aria-label="delete"
-                                  onClick={() => onDelete && onDelete(d.id)}>
+                                  onClick={() =>
+                                    confirmDialogContent.current?.open(
+                                      'Eliminar',
+                                      'Tem a certeza que deseja eliminar?',
+                                      () => onDelete && onDelete(d.id),
+                                    )
+                                  }>
                                   <DeleteIcon />
                                 </IconButton>
                               </>
