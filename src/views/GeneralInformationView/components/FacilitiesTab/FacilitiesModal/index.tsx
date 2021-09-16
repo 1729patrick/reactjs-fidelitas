@@ -7,6 +7,7 @@ import ChildFriendlyIcon from '@material-ui/icons/ChildFriendly';
 import LocalParkingIcon from '@material-ui/icons/LocalParking';
 import WifiIcon from '@material-ui/icons/Wifi';
 import PaymentIcon from '@material-ui/icons/Payment';
+import { useFacilities } from '../../../../../api/useFacilities';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,19 +63,28 @@ const FacilityCheckBox: React.FC<FacilityCheckBoxProps> = ({
 type PropsType = {
   open: boolean;
   handleCloseModal: () => void;
+  facilityIcon: any;
 };
 
-const FacilitiesModal: React.FC<PropsType> = ({ open, handleCloseModal }) => {
+const FacilitiesModal: React.FC<PropsType> = ({
+  open,
+  handleCloseModal,
+  facilityIcon,
+}) => {
   const classes = useStyles();
   const [checkFacilities, setCheckFacilities] = useState({
-    smokeArea: false,
-    parking: false,
     wifi: false,
-    reducedMobility: false,
+    smokingFriendly: false,
+    alcoholicBeverage: false,
+    goodForDinner: false,
+    goodForLunch: false,
+    paymentWithCard: false,
+    paymentWithMoney: false,
+    carPark: false,
     babyChair: false,
-    creditCard: false,
+    reducedMobility: false,
   });
-
+  const facilities = useFacilities();
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     facility: string,
@@ -106,51 +116,17 @@ const FacilitiesModal: React.FC<PropsType> = ({ open, handleCloseModal }) => {
             justifyContent: 'space-around',
           }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <FacilityCheckBox
-              icon={<SmokingRoomsIcon />}
-              text={'Zona para fumadores'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'smokeArea')
-              }
-            />
-            <FacilityCheckBox
-              icon={<LocalParkingIcon />}
-              text={'Parque de estacionamento'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'parking')
-              }
-            />
-            <FacilityCheckBox
-              icon={<WifiIcon />}
-              text={'WiFi'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'wifi')
-              }
-            />
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <FacilityCheckBox
-              icon={<AccessibleForwardIcon />}
-              text={'Acesso a mobilidade reduzida'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'reducedMobility')
-              }
-            />
-            <FacilityCheckBox
-              icon={<ChildFriendlyIcon />}
-              text={'Cadeira para bebés'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'babyChair')
-              }
-            />
-            <FacilityCheckBox
-              icon={<PaymentIcon />}
-              text={'Multibanco'}
-              handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, 'creditCard')
-              }
-            />
+            {facilities.facilities &&
+              facilities.facilities.map((facility: any) => (
+                <FacilityCheckBox
+                  key={facility.id}
+                  icon={facilityIcon(facility.title).icon}
+                  text={facilityIcon(facility.title).text}
+                  handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChange(event, facilityIcon(facility.title).key)
+                  }
+                />
+              ))}
           </div>
         </div>
         <div
