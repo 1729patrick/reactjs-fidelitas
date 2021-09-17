@@ -12,6 +12,7 @@ import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EuroIcon from '@mui/icons-material/Euro';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 import FacilitiesModal from '../FacilitiesModal';
 
 import { useRestaurantFacilities } from '../../../../../api/useRestaurantFacilities';
@@ -71,6 +72,12 @@ const facilityIcon = (title: string) => {
         icon: <LunchDiningIcon />,
         text: 'Bom para Almoços',
         key: 'goodForLunch',
+      };
+    case 'alcoholicBeverage':
+      return {
+        icon: <LocalBarIcon />,
+        text: 'Bebidas Alcoólicas',
+        key: 'alcoholicBeverage',
       };
     default:
       return { icon: <DoneAllIcon />, text: title, key: 'nokey' };
