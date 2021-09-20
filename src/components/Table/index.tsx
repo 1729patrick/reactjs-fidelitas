@@ -167,7 +167,8 @@ type Props = {
   notifications?: boolean;
   reserve?: boolean;
   clients?: boolean;
-  onSubmit?: (obj: any) => Promise<boolean>;
+  onSubmit?: (obj: any, date?: any, time?: any) => Promise<boolean>;
+  onUpdate?: (...args: any) => Promise<boolean>;
   onDelete?: (obj: any) => Promise<boolean>;
 };
 
@@ -180,6 +181,7 @@ const ResponsiveTable: React.FC<Props> = ({
   reserve = false,
   clients = false,
   onSubmit,
+  onUpdate,
   onDelete,
 }) => {
   const classes = useStyles();
@@ -312,11 +314,11 @@ const ResponsiveTable: React.FC<Props> = ({
             paddingRight: '10px',
             paddingTop: '10px',
           }}>
-          {reserve && (
+          {/*reserve && (
             <IconButton aria-label="config" onClick={handleConfigModal}>
               <SettingsIcon style={{ color: Palette.primaryBackgroundColor }} />
             </IconButton>
-          )}
+          )*/}
         </div>
         <TableContainer>
           <Table
@@ -342,6 +344,7 @@ const ResponsiveTable: React.FC<Props> = ({
                 dataRef={modalDataRef}
                 actionTitle={actionTitle}
                 onSubmit={onSubmit}
+                reserve={reserve && reserve}
               />
             )}
             {openConfigModal && (
@@ -351,6 +354,7 @@ const ResponsiveTable: React.FC<Props> = ({
               <AnswerReserveModal
                 handleCloseModal={() => handleAnswerReserveModal()}
                 dataRef={modalDataRef}
+                onUpdate={onUpdate}
               />
             )}
             {openSendNotificationModal && (
@@ -396,7 +400,14 @@ const ResponsiveTable: React.FC<Props> = ({
                               <>
                                 <IconButton
                                   aria-label="confirm"
-                                  onClick={() => {}}>
+                                  onClick={() =>
+                                    confirmDialogContent.current?.open(
+                                      'Aceitar reserva',
+                                      'Tem a certeza que deseja aceitar o pedido de reserva?',
+                                      () =>
+                                        onUpdate && onUpdate(d.id, 'confirmed'),
+                                    )
+                                  }>
                                   <CheckCircleIcon />
                                 </IconButton>
                                 <IconButton
@@ -416,7 +427,8 @@ const ResponsiveTable: React.FC<Props> = ({
                                     confirmDialogContent.current?.open(
                                       'Recusar reserva',
                                       'Tem a certeza que deseja recusar o pedido de reserva?',
-                                      () => {},
+                                      //@ts-ignore
+                                      onUpdate,
                                     )
                                   }>
                                   <NotInterestedIcon />

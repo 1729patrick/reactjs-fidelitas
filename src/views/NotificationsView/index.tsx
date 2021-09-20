@@ -70,7 +70,7 @@ const NotificationsView = () => {
   const { mutate } = useSWRConfig();
 
   const onSubmit = async (formControl: any) => {
-    const notification = await api.put('/restaurants/notifications/add', {
+    const notification = await api.post('/restaurants/notifications/add', {
       title: formControl['title'],
       description: formControl['description'],
       type: formControl['type'],

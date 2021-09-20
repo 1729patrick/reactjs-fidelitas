@@ -23,6 +23,13 @@ import DateFnsUtils from '@date-io/date-fns';
 import api from '../../utils/Api';
 import { useAuth } from '../../contexts/Auth';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+import {
+  DatePicker,
+  LocalizationProvider,
+  MobileDatePicker,
+  TimePicker,
+} from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 
 const notificationsType = ['email', 'pushNotification', 'sms'];
 const achievementsType = ['cash', 'product', 'discount'];
@@ -71,7 +78,8 @@ type Props = {
   title?: string;
   dataRef?: any;
   actionTitle?: string;
-  onSubmit?: (obj: any) => Promise<boolean>;
+  onSubmit?: (obj: any, date?: any, time?: any) => Promise<boolean>;
+  reserve?: boolean;
 };
 
 const CreateUpdateModal: React.FC<Props> = ({
@@ -82,14 +90,15 @@ const CreateUpdateModal: React.FC<Props> = ({
   dataRef,
   actionTitle,
   onSubmit,
+  reserve,
 }) => {
   const classes = useStyles();
 
   const [formControl, setFormControl] = useState<{ [key: string]: any }>(
     dataRef?.current,
   );
-  const [selectedDate, setSelectedDate] = useState<Date | null>();
-  const [selectedTime, setSelectedTime] = useState<Date | null>();
+  const [selectedDate, setSelectedDate] = useState<any>();
+  const [selectedTime, setSelectedTime] = useState<any>();
   const { user } = useAuth();
   /**
    * TO handle the data
@@ -101,12 +110,10 @@ const CreateUpdateModal: React.FC<Props> = ({
     }
   }, []);
 
-  const handleChangeDate = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-  const handleChangeTime = (time: Date | null) => {
-    setSelectedTime(time);
-  };
+  useEffect(() => {
+    console.log('sDate', selectedDate);
+    console.log('sTime', selectedTime);
+  }, [selectedDate, selectedTime]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormControl({
@@ -118,10 +125,20 @@ const CreateUpdateModal: React.FC<Props> = ({
     });
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (
+    event: React.FormEvent,
+    date?: any,
+    time?: any,
+  ) => {
     event.preventDefault();
+
+    let result = false;
     if (onSubmit) {
-      const result = await onSubmit(formControl);
+      if (reserve) {
+        result = await onSubmit(formControl, selectedDate, selectedTime);
+      } else {
+        result = await onSubmit(formControl);
+      }
       if (result) {
         handleCloseModal();
       } else {
@@ -131,233 +148,215 @@ const CreateUpdateModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={() => handleCloseModal()}
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description">
-      <div className={classes.paper}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <h1>
-            {actionTitle} {title}
-          </h1>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={() => handleCloseModal()}>
-            <HighlightOffIcon fontSize={'large'} />
-          </IconButton>
-        </div>
-        <form onSubmit={handleSubmit}>
-          {fields.map((field: any, index: number) => {
-            if (
-              field.isEditable &&
-              (field.type === 'text' ||
-                field.type === 'number' ||
-                field.type === 'email')
-            ) {
-              return (
-                <TextField
-                  key={index}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id={field.id}
-                  type={field.type}
-                  value={(formControl && formControl[field.id]) || ''}
-                  name={field.id}
-                  onChange={handleChange}
-                  label={field.label}
-                  autoComplete={field.type}
-                  multiline={field.type === 'text'}
-                  inputProps={{ min: field.id === 'price' && 0 }}
-                  InputProps={{
-                    endAdornment: field.id === 'price' && (
-                      <InputAdornment position={'end'}>
-                        <EuroSymbolIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              );
-            }
-            if (field.type === 'select') {
-              return (
-                <TextField
-                  key={index}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id={field.id}
-                  type={field.type}
-                  value={(formControl && formControl[field.id]) || ''}
-                  name={field.id}
-                  onChange={handleChange}
-                  label={field.label}
-                  autoComplete={field.type}
-                  select>
-                  {field.id === 'type' &&
-                    field.label === 'Tipo' &&
-                    notificationsType.map(
-                      (notificationType: string, index: number) => (
-                        <MenuItem key={index} value={notificationType}>
-                          {notificationType}
-                        </MenuItem>
-                      ),
-                    )}
-                  {field.id === 'type' &&
-                    field.label === 'Menu' &&
-                    productsType.map((productType: string, index: number) => (
-                      <MenuItem key={index} value={productType}>
-                        {productType}
-                      </MenuItem>
-                    ))}
-                  {field.id === 'type' &&
-                    field.label === 'Tipo de Prémio' &&
-                    achievementsType.map(
-                      (achievementType: string, index: number) => (
-                        <MenuItem key={index} value={achievementType}>
-                          {achievementType}
-                        </MenuItem>
-                      ),
-                    )}
-                </TextField>
-              );
-            }
-            /* Inputs !== text field
-                              return (
-                                <FormControl
-                                  className={clsx(classes.margin, classes.textField)}
-                                  key={index}>
-                                  <InputLabel htmlFor={field.id}>{field.label}</InputLabel>
-                                  <Input
-                                    id={field.id}
-                                    type={field.type}
-                                    value={formControl[field.id]}
-                                    name={field.id}
-                                    onChange={handleChange}
-                                    endAdornment={
-                                      <InputAdornment position="end">
-                                        {<IconButton
-                                              aria-label="toggle password visibility"
-                                              onClick={handleClickShowPassword}
-                                              onMouseDown={handleMouseDownPassword}>
-                                              {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                          </IconButton>
-            }}
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-              );
-            */
-            if (
-              field.isEditable &&
-              (field.type === 'date' || field.type === 'time')
-            ) {
-              /*
-              return (
-                <FormControl
-                  className={clsx(classes.margin, classes.textField)}
-                  key={index}>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    {field.type == 'date' ? (
-                      <KeyboardDatePicker
-                        margin="normal"
-                        id={field.id}
-                        label={field.label}
-                        format="dd/MM/yyyy"
-                        value={selectedDate}
-                        onChange={handleChangeDate}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                      />
-                    ) : (
-                      <KeyboardTimePicker
-                        margin="normal"
-                        id={field.id}
-                        label={field.label}
-                        value={selectedTime}
-                        onChange={handleChangeTime}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change time',
-                        }}
-                      />
-                    )}
-                  </MuiPickersUtilsProvider>
-                </FormControl>
-              );
-            */
-            }
-            if (
-              field.isEditable &&
-              (field.type === 'file' || field.type === 'image')
-            ) {
-              return (
-                <>
-                  <InputLabel
-                    style={{
-                      color: '0,0,0,0.54',
-                      paddingLeft: 8,
-
-                      fontSize: '0.8rem',
-                      fontFamily: 'Helvetica',
-                      fontWeight: 400,
-                      lineHeight: 1,
-                      letterSpacing: '0.00938em',
-                    }}
-                    htmlFor={field.id}>
-                    Imagem
-                  </InputLabel>
-                  <FormControl
-                    className={clsx(classes.margin, classes.textField)}
-                    key={index}>
-                    {formControl && formControl[field.id] && (
-                      <img
-                        src={formControl[field.id]}
-                        style={{ width: 50, height: 50 }}
-                      />
-                    )}
-                    <Input
-                      id={field.id}
-                      type={'file'}
-                      name={field.id}
-                      onChange={handleChange}
-                      style={{ borderStyle: 'none', borderBottom: 0 }}
-                    />
-                  </FormControl>
-                </>
-              );
-            }
-          })}
+    <LocalizationProvider dateAdapter={DateAdapter}>
+      <Modal
+        open={open}
+        onClose={() => handleCloseModal()}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description">
+        <div className={classes.paper}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginTop: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginLeft: '5px' }}
-              type="submit">
-              {actionTitle}
-            </Button>
+            <h1>
+              {actionTitle} {title}
+            </h1>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={() => handleCloseModal()}>
+              <HighlightOffIcon fontSize={'large'} />
+            </IconButton>
           </div>
-        </form>
-      </div>
-    </Modal>
+          <form onSubmit={handleSubmit}>
+            {fields.map((field: any, index: number) => {
+              if (
+                field.isEditable &&
+                (field.type === 'text' ||
+                  field.type === 'number' ||
+                  field.type === 'email')
+              ) {
+                return (
+                  <TextField
+                    key={index}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id={field.id}
+                    type={field.type}
+                    value={(formControl && formControl[field.id]) || ''}
+                    name={field.id}
+                    onChange={handleChange}
+                    label={field.label}
+                    autoComplete={field.type}
+                    multiline={field.type === 'text'}
+                    inputProps={{ min: field.id === 'price' && 0 }}
+                    InputProps={{
+                      endAdornment: field.id === 'price' && (
+                        <InputAdornment position={'end'}>
+                          <EuroSymbolIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                );
+              }
+              if (field.type === 'select') {
+                return (
+                  <TextField
+                    key={index}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id={field.id}
+                    type={field.type}
+                    value={(formControl && formControl[field.id]) || ''}
+                    name={field.id}
+                    onChange={handleChange}
+                    label={field.label}
+                    autoComplete={field.type}
+                    select>
+                    {field.id === 'type' &&
+                      field.label === 'Tipo' &&
+                      notificationsType.map(
+                        (notificationType: string, index: number) => (
+                          <MenuItem key={index} value={notificationType}>
+                            {notificationType}
+                          </MenuItem>
+                        ),
+                      )}
+                    {field.id === 'type' &&
+                      field.label === 'Menu' &&
+                      productsType.map((productType: string, index: number) => (
+                        <MenuItem key={index} value={productType}>
+                          {productType}
+                        </MenuItem>
+                      ))}
+                    {field.id === 'type' &&
+                      field.label === 'Tipo de Prémio' &&
+                      achievementsType.map(
+                        (achievementType: string, index: number) => (
+                          <MenuItem key={index} value={achievementType}>
+                            {achievementType}
+                          </MenuItem>
+                        ),
+                      )}
+                  </TextField>
+                );
+              }
+              if (field.isEditable && field.type === 'date') {
+                return (
+                  <MobileDatePicker
+                    disablePast
+                    label="Data"
+                    openTo="day"
+                    views={['year', 'month', 'day']}
+                    value={selectedDate}
+                    onChange={(newValue: any) => {
+                      setSelectedDate(newValue);
+                    }}
+                    renderInput={params => (
+                      // @ts-ignore
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        {...params}
+                      />
+                    )}
+                  />
+                );
+              }
+              if (field.isEditable && field.type === 'time') {
+                return (
+                  <TimePicker
+                    label="Horas"
+                    value={selectedTime}
+                    ampm={false}
+                    onChange={(newValue: any) => {
+                      setSelectedTime(newValue);
+                    }}
+                    renderInput={params => (
+                      // @ts-ignore
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        {...params}
+                      />
+                    )}
+                  />
+                );
+              }
+              if (
+                field.isEditable &&
+                (field.type === 'file' || field.type === 'image')
+              ) {
+                return (
+                  <>
+                    <InputLabel
+                      style={{
+                        color: '0,0,0,0.54',
+                        paddingLeft: 8,
+
+                        fontSize: '0.8rem',
+                        fontFamily: 'Helvetica',
+                        fontWeight: 400,
+                        lineHeight: 1,
+                        letterSpacing: '0.00938em',
+                      }}
+                      htmlFor={field.id}>
+                      Imagem
+                    </InputLabel>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      key={index}>
+                      {formControl && formControl[field.id] && (
+                        <img
+                          src={formControl[field.id]}
+                          style={{ width: 50, height: 50 }}
+                        />
+                      )}
+                      <Input
+                        id={field.id}
+                        type={'file'}
+                        name={field.id}
+                        onChange={handleChange}
+                        style={{ borderStyle: 'none', borderBottom: 0 }}
+                      />
+                    </FormControl>
+                  </>
+                );
+              }
+            })}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                marginTop: '10px',
+              }}>
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{ marginLeft: '5px' }}
+                type="submit">
+                {actionTitle}
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+    </LocalizationProvider>
   );
 };
 

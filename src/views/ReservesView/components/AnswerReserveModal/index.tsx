@@ -17,6 +17,8 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import clsx from 'clsx';
 import { AccessTime, Euro, Group, People } from '@material-ui/icons';
+import { LocalizationProvider, MobileDatePicker, TimePicker } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,116 +52,133 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   handleCloseModal: () => void;
   dataRef: any;
+  onUpdate?: (...args: any) => Promise<boolean>;
 };
 
-const AnswerReserveModal: React.FC<Props> = ({ handleCloseModal, dataRef }) => {
+const AnswerReserveModal: React.FC<Props> = ({
+  handleCloseModal,
+  dataRef,
+  onUpdate,
+}) => {
   const classes = useStyles();
 
-  const [formControl, setFormControl] = useState<{ [key: string]: any }>(
-    dataRef?.current,
-  );
+  const [time, setTime] = useState();
+
+  const [date, setDate] = useState();
+
+  const [message, setMessage] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormControl({
-      ...formControl,
-      [event.target.name]: event.target.value,
-    });
+    setMessage(event.target.value);
+  };
+
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    if (onUpdate) onUpdate();
   };
 
   return (
-    <Modal
-      open={true}
-      onClose={() => handleCloseModal()}
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description">
-      <div className={classes.paper}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <h1>Responder à reserva</h1>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={() => handleCloseModal()}>
-            <HighlightOffIcon fontSize={'large'} />
-          </IconButton>
-        </div>
-        <form onSubmit={() => {}}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id={'time'}
-            type="time"
-            defaultValue={formControl['hours']}
-            name={'time'}
-            onChange={handleChange}
-            label={'Horas'}
-            autoComplete={'time'}
-            multiline
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id={'date'}
-            type={'date'}
-            value={formControl['date']}
-            name={'date'}
-            onChange={handleChange}
-            label={'Data'}
-            autoComplete={'time'}
-            multiline
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id={'message'}
-            type={'text'}
-            //value={formControl['hours']}
-            name={'Horas'}
-            onChange={handleChange}
-            label={'Mensagem'}
-            //autoComplete={'time'}
-            multiline
-            autoFocus
-          />
+    <LocalizationProvider dateAdapter={DateAdapter}>
+      <Modal
+        open={true}
+        onClose={() => handleCloseModal()}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description">
+        <div className={classes.paper}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginTop: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginLeft: '5px' }}
-              type="submit">
-              Enviar
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              style={{ marginLeft: '5px' }}
-              onClick={handleCloseModal}>
-              Cancelar
-            </Button>
+            <h1>Responder à reserva</h1>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={() => handleCloseModal()}>
+              <HighlightOffIcon fontSize={'large'} />
+            </IconButton>
           </div>
-        </form>
-      </div>
-    </Modal>
+          <form onSubmit={onSubmit}>
+            <TimePicker
+              label="Horas"
+              value={time}
+              ampm={false}
+              onChange={(newValue: any) => {
+                setTime(newValue);
+              }}
+              renderInput={params => (
+                // @ts-ignore
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  {...params}
+                />
+              )}
+            />
+            <MobileDatePicker
+              disablePast
+              label="Data"
+              openTo="day"
+              views={['year', 'month', 'day']}
+              value={date}
+              onChange={(newValue: any) => {
+                setDate(newValue);
+              }}
+              renderInput={params => (
+                // @ts-ignore
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  {...params}
+                />
+              )}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id={'message'}
+              type={'text'}
+              name={'Horas'}
+              onChange={handleChange}
+              label={'Mensagem'}
+              multiline
+              autoFocus
+            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                marginTop: '10px',
+              }}>
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{ marginLeft: '5px' }}
+                type="submit">
+                Enviar
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{ marginLeft: '5px' }}
+                onClick={handleCloseModal}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+    </LocalizationProvider>
   );
 };
 

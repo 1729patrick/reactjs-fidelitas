@@ -128,7 +128,7 @@ const DiscountsView = () => {
   const { mutate } = useSWRConfig();
 
   const onSubmit = async (formControl: any) => {
-    const achievement = await api.put('/achievements/add', {
+    const achievement = await api.post('/achievements/add', {
       title: formControl['title'],
       description: formControl['description'],
       type: formControl['type'],

@@ -125,7 +125,7 @@ const ProductsView = () => {
     formData.append('file', formControl['image']);
     const res = await api.post('/files/upload', formData);
 
-    const product = await api.put('/products/add', {
+    const product = await api.post('/products/add', {
       description: formControl['description'],
       allergens: formControl['allergens'],
       ingredients: formControl['ingredients'],

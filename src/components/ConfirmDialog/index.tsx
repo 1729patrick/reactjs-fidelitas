@@ -13,9 +13,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import { TextField } from '@mui/material';
 
 export type DialogHandler = {
-  open: (title: string, text: string, action: () => void) => void;
+  open: (title: string, text: string, action: () => any) => void;
 };
 
 type PropsType = {};
@@ -34,7 +35,11 @@ const ConfirmDialog: React.ForwardRefRenderFunction<DialogHandler, PropsType> =
     const open = useCallback(
       (title: string, text: string, action: () => void) => {
         setVisible(true);
-        setConfirmDialog({ title: title, text: text, action: action });
+        setConfirmDialog({
+          title: title,
+          text: text,
+          action: action,
+        });
       },
       [setVisible, setConfirmDialog],
     );
@@ -67,6 +72,19 @@ const ConfirmDialog: React.ForwardRefRenderFunction<DialogHandler, PropsType> =
         </DialogTitle>
         <DialogContent>
           <DialogContentText>{confirmDialog.text}</DialogContentText>
+          {/*isMessage && (
+            <TextField
+              autoFocus
+              id="name"
+              label="Motivo (Será enviada uma notificação)"
+              type="email"
+              fullWidth
+              multiline
+              variant="outlined"
+              margin="normal"
+              onChange={event => setMessage(event.target.value)}
+            />
+          ) */}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
