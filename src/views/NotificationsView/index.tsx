@@ -66,7 +66,6 @@ const headCells: HeadCell[] = [
 
 const NotificationsView = () => {
   const notifications = useNotifications();
-  console.log('notification', notifications.notifications);
   const { mutate } = useSWRConfig();
 
   const onSubmit = async (formControl: any) => {
@@ -75,7 +74,6 @@ const NotificationsView = () => {
       description: formControl['description'],
       type: formControl['type'],
     });
-    console.log('product', notification);
 
     if (notification.status === 200) {
       mutate('/restaurants/notifications');

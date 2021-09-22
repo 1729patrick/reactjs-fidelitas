@@ -117,7 +117,7 @@ const ProductsView = () => {
   const { mutate } = useSWRConfig();
 
   const { user } = useAuth();
-  console.log('user', user);
+
   const onSubmit = async (formControl: any) => {
     let formData = new FormData();
 
@@ -135,7 +135,6 @@ const ProductsView = () => {
       restaurantId: 1,
       imageId: res.data.id,
     });
-    console.log('product', product);
 
     if (product.status === 200) {
       mutate('/products');

@@ -29,6 +29,7 @@ import { translations } from '../Drawer';
 import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserveModal';
 import ConfirmDialog, { DialogHandler } from '../ConfirmDialog';
 import NotificationModal from '../../views/ClientsView/components/NotificationModal';
+import { useProduct } from '../../api/useProducts';
 
 interface Data {
   calories: number;
@@ -130,6 +131,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     </TableHead>
   );
 }
+type ProductTypes = {
+  id: number;
+  value: any;
+};
+
+const Product: React.FC<ProductTypes> = ({ id, value }) => {
+  const product = useProduct(id);
+  if (product.product) {
+    return (
+      <span>
+        {product?.product?.title}x{value}
+      </span>
+    );
+  } else {
+    return <></>;
+  }
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -230,7 +248,15 @@ const ResponsiveTable: React.FC<Props> = ({
     return bool ? 'Ativo' : 'Inativo';
   };
 
-  const cellRenderByType = (type: string, value: any) => {
+  const cellRenderByType = (
+    type: string,
+    value: any,
+    extraTag?: string,
+    extraData?: any,
+  ) => {
+    if (extraTag && extraTag === 'product') {
+      return <Product id={extraData} value={value} />;
+    }
     if (type === 'boolean') {
       return booleanToString(value);
     } else if (type === 'date') {
@@ -343,6 +369,7 @@ const ResponsiveTable: React.FC<Props> = ({
                 title={title}
                 dataRef={modalDataRef}
                 actionTitle={actionTitle}
+                onUpdate={onUpdate}
                 onSubmit={onSubmit}
                 reserve={reserve && reserve}
               />
@@ -374,10 +401,17 @@ const ResponsiveTable: React.FC<Props> = ({
                     <TableRow hover tabIndex={-1} key={d.id}>
                       {fields.map((value: any, i: number) => (
                         <TableCell align={'left'} key={i}>
-                          {cellRenderByType(value.type, d[value.id])}
+                          {d.rewardType === 'product' &&
+                          value.id === 'rewardValue'
+                            ? cellRenderByType(
+                                value.type,
+                                d[value.id],
+                                'product',
+                                d['productId'],
+                              )
+                            : cellRenderByType(value.type, d[value.id])}
                         </TableCell>
                       ))}
-
                       {actions && (
                         <TableCell align={'left'}>
                           <div

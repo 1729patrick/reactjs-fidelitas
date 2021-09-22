@@ -9,3 +9,13 @@ export function useProducts() {
     isLoading,
   };
 }
+
+export function useProduct(id: number) {
+  const { data, error, isLoading } = useFetch(`/products/${id}`);
+
+  return {
+    product: data,
+    isError: error,
+    isLoading,
+  };
+}

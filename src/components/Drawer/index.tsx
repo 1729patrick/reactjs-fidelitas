@@ -109,7 +109,7 @@ export const translations: any = {
   clients: 'Clientes',
   // menu: 'Ementa',
   products: 'Produtos',
-  discounts: 'Descontos',
+  achievements: 'Desafios',
   reserves: 'Reservas',
   points: 'Sistema de Pontuação',
   generalInformations: 'Informações Gerais',
@@ -161,8 +161,8 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Produtos':
         history.push('/products');
         break;
-      case 'Descontos':
-        history.push('/discounts');
+      case 'Desafios':
+        history.push('/achievements');
         break;
       case 'Reservas':
         history.push('/reserves');
@@ -216,7 +216,7 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
           // 'Ementa',
           'Produtos',
           'Clientes',
-          'Descontos',
+          'Desafios',
           'Reservas',
           //  'Sistema de Pontuação',
           'Notificações',

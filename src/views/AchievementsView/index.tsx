@@ -66,7 +66,15 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'reward',
+    id: 'type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Tipo de Desafio',
+    type: 'select',
+    isEditable: true,
+  },
+  {
+    id: 'rewardTitle',
     numeric: false,
     disablePadding: false,
     label: 'Prémio',
@@ -74,11 +82,19 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'type',
+    id: 'rewardType',
     numeric: false,
     disablePadding: false,
     label: 'Tipo de Prémio',
     type: 'select',
+    isEditable: true,
+  },
+  {
+    id: 'rewardValue',
+    numeric: true,
+    disablePadding: false,
+    label: 'Quantidade do Prémio',
+    type: 'number',
     isEditable: true,
   },
   {
@@ -89,14 +105,7 @@ const headCells: HeadCell[] = [
     type: 'number',
     isEditable: true,
   },
-  {
-    id: 'rewardValue',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor do custo',
-    type: 'number',
-    isEditable: true,
-  },
+
   /*  {
     id: 'isActive',
     numeric: false,
@@ -128,15 +137,35 @@ const DiscountsView = () => {
   const { mutate } = useSWRConfig();
 
   const onSubmit = async (formControl: any) => {
-    const achievement = await api.post('/achievements/add', {
+    const achievement = await api.post('/achievements', {
       title: formControl['title'],
       description: formControl['description'],
       type: formControl['type'],
-      reward: formControl['reward'],
+      rewardTitle: formControl['rewardTitle'],
+      rewardType: formControl['rewardType'],
       rewardValue: parseFloat(formControl['rewardValue']),
       cost: parseFloat(formControl['cost']),
+      productId: formControl['productReward']?.id,
     });
+    if (achievement.status === 200) {
+      mutate('/achievements');
+      return true;
+    } else {
+      return false;
+    }
+  };
 
+  const onUpdate = async (id: number, formControl: any) => {
+    const achievement = await api.put(`/achievements/${id}`, {
+      title: formControl['title'],
+      description: formControl['description'],
+      type: formControl['type'],
+      rewardTitle: formControl['rewardTitle'],
+      rewardType: formControl['rewardType'],
+      rewardValue: parseFloat(formControl['rewardValue']),
+      cost: parseFloat(formControl['cost']),
+      productId: formControl['productReward']?.id,
+    });
     if (achievement.status === 200) {
       mutate('/achievements');
       return true;
@@ -164,6 +193,7 @@ const DiscountsView = () => {
           actions={true}
           title={'Desconto'}
           onSubmit={onSubmit}
+          onUpdate={onUpdate}
           onDelete={onDelete}
         />
       ) : (

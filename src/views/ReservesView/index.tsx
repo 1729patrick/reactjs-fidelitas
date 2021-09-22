@@ -143,11 +143,11 @@ const ReservesView = () => {
   //inicio do drag and drop code
 
   // @ts-ignore-start
-  const reorder = (list, startIndex, endIndex) => {
+  const reorder = list => {
     const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
 
+    // @ts-ignore
+    result.sort((a: any, b: any) => a.date > b.date);
     return result;
   };
   // @ts-ignore-start
@@ -243,19 +243,16 @@ const ReservesView = () => {
     status: any,
     adminNotes?: string,
   ) => {
-    console.log('reservationId', reservationId);
     const achievement = await api.put(
       '/restaurants/reservations/' + reservationId.id,
-      adminNotes
-        ? {
-            status: status,
-            adminNotes: adminNotes,
-          }
-        : { status: status },
+      {
+        status: status,
+        adminNotes: adminNotes,
+      },
     );
 
     if (achievement.status === 200) {
-      //mutate('/restaurants/reservations');
+      mutate('/restaurants/reservations');
       return true;
     } else {
       return false;
@@ -295,7 +292,7 @@ const ReservesView = () => {
       case 1:
         return 'inReview';
       case 2:
-        return 'confirm';
+        return 'confirmed';
     }
   };
 
@@ -311,15 +308,15 @@ const ReservesView = () => {
 
     if (sInd === dInd) {
       if (sInd === 0) {
-        const items = reorder(canceled, source.index, destination.index);
+        const items = reorder(canceled);
         // @ts-ignore-start
         setCanceled([...items]);
       } else if (sInd === 1) {
-        const items = reorder(inReview, source.index, destination.index);
+        const items = reorder(inReview);
         // @ts-ignore-start
         setInReview([...items]);
       } else {
-        const items = reorder(confirm, source.index, destination.index);
+        const items = reorder(confirm);
         // @ts-ignore-start
         setConfirm([...items]);
       }
@@ -368,8 +365,6 @@ const ReservesView = () => {
   }
 
   //Fim do drag and drop code
-
-  console.log('reservations', reservations);
 
   const renderReserve = (item: any) => {
     return (

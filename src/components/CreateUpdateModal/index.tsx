@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Modal from '@material-ui/core/Modal';
@@ -10,7 +10,6 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  MenuItem,
   TextField,
 } from '@material-ui/core';
 import {
@@ -30,9 +29,22 @@ import {
   TimePicker,
 } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
+import {
+  Autocomplete,
+  AutocompleteChangeDetails,
+  AutocompleteChangeReason,
+  MenuItem,
+} from '@mui/material';
+import { useProducts } from '../../api/useProducts';
 
 const notificationsType = ['email', 'pushNotification', 'sms'];
 const achievementsType = ['cash', 'product', 'discount'];
+const challengesType = [
+  'shareApp',
+  'visitRestaurant',
+  'purchasePrice',
+  'purchaseEvaluation',
+];
 const productsType = [
   'starter',
   'main',
@@ -79,6 +91,7 @@ type Props = {
   dataRef?: any;
   actionTitle?: string;
   onSubmit?: (obj: any, date?: any, time?: any) => Promise<boolean>;
+  onUpdate?: (obj: any, date?: any, time?: any) => Promise<boolean>;
   reserve?: boolean;
 };
 
@@ -90,6 +103,7 @@ const CreateUpdateModal: React.FC<Props> = ({
   dataRef,
   actionTitle,
   onSubmit,
+  onUpdate,
   reserve,
 }) => {
   const classes = useStyles();
@@ -99,21 +113,10 @@ const CreateUpdateModal: React.FC<Props> = ({
   );
   const [selectedDate, setSelectedDate] = useState<any>();
   const [selectedTime, setSelectedTime] = useState<any>();
-  const { user } = useAuth();
+  const products = useProducts();
   /**
    * TO handle the data
    */
-  useEffect(() => {
-    if (dataRef.current) {
-      console.log(dataRef);
-      //setSelectedDate(dataRef.current[0]);
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('sDate', selectedDate);
-    console.log('sTime', selectedTime);
-  }, [selectedDate, selectedTime]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormControl({
@@ -125,6 +128,18 @@ const CreateUpdateModal: React.FC<Props> = ({
     });
   };
 
+  const handleChangeProductReward = (
+    event: SyntheticEvent<Element, Event>,
+    value: any,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<any> | undefined,
+  ) => {
+    setFormControl({
+      ...formControl,
+      productReward: value,
+    });
+  };
+
   const handleSubmit = async (
     event: React.FormEvent,
     date?: any,
@@ -133,16 +148,33 @@ const CreateUpdateModal: React.FC<Props> = ({
     event.preventDefault();
 
     let result = false;
-    if (onSubmit) {
-      if (reserve) {
-        result = await onSubmit(formControl, selectedDate, selectedTime);
-      } else {
-        result = await onSubmit(formControl);
+    if (actionTitle === 'Adicionar') {
+      if (onSubmit) {
+        if (reserve) {
+          result = await onSubmit(formControl, selectedDate, selectedTime);
+        } else {
+          result = await onSubmit(formControl);
+        }
+        if (result) {
+          handleCloseModal();
+        } else {
+          console.log('errou');
+        }
       }
-      if (result) {
-        handleCloseModal();
-      } else {
-        console.log('errou');
+    }
+
+    if (actionTitle === 'Editar') {
+      if (onUpdate) {
+        if (reserve) {
+          result = await onUpdate(formControl, selectedDate, selectedTime);
+        } else {
+          result = await onUpdate(dataRef.current.id, formControl);
+        }
+        if (result) {
+          handleCloseModal();
+        } else {
+          console.log('errou');
+        }
       }
     }
   };
@@ -209,48 +241,140 @@ const CreateUpdateModal: React.FC<Props> = ({
               }
               if (field.type === 'select') {
                 return (
-                  <TextField
-                    key={index}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id={field.id}
-                    type={field.type}
-                    value={(formControl && formControl[field.id]) || ''}
-                    name={field.id}
-                    onChange={handleChange}
-                    label={field.label}
-                    autoComplete={field.type}
-                    select>
-                    {field.id === 'type' &&
-                      field.label === 'Tipo' &&
-                      notificationsType.map(
-                        (notificationType: string, index: number) => (
-                          <MenuItem key={index} value={notificationType}>
-                            {notificationType}
-                          </MenuItem>
-                        ),
+                  <>
+                    <TextField
+                      key={index}
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id={field.id}
+                      type={field.type}
+                      value={(formControl && formControl[field.id]) || ''}
+                      name={field.id}
+                      onChange={handleChange}
+                      label={field.label}
+                      // autoComplete={field.type}
+                      select>
+                      {field.id === 'type' &&
+                        field.label === 'Tipo' &&
+                        notificationsType.map(
+                          (notificationType: string, index: number) => (
+                            <MenuItem key={index} value={notificationType}>
+                              {notificationType}
+                            </MenuItem>
+                          ),
+                        )}
+                      {field.id === 'type' &&
+                        field.label === 'Menu' &&
+                        productsType.map(
+                          (productType: string, index: number) => (
+                            <MenuItem key={index} value={productType}>
+                              {productType}
+                            </MenuItem>
+                          ),
+                        )}
+                      {field.id === 'type' &&
+                        field.label === 'Tipo de Desafio' &&
+                        challengesType.map(
+                          (challengeType: string, index: number) => (
+                            <MenuItem key={index} value={challengeType}>
+                              {challengeType}
+                            </MenuItem>
+                          ),
+                        )}
+                      {field.id === 'rewardType' &&
+                        field.label === 'Tipo de Prémio' &&
+                        achievementsType.map(
+                          (achievementType: string, index: number) => (
+                            <MenuItem key={index} value={achievementType}>
+                              {achievementType}
+                            </MenuItem>
+                          ),
+                        )}
+                    </TextField>
+
+                    {field.id === 'rewardType' &&
+                      formControl[field.id] === 'product' && (
+                        <Autocomplete
+                          disablePortal
+                          id="combo-box-demo"
+                          options={products.products}
+                          getOptionLabel={(options: any) => options.title}
+                          fullWidth
+                          onChange={handleChangeProductReward}
+                          renderInput={params => {
+                            return (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                margin="normal"
+                                label="Product"
+                              />
+                            );
+                          }}
+                        />
                       )}
-                    {field.id === 'type' &&
-                      field.label === 'Menu' &&
-                      productsType.map((productType: string, index: number) => (
-                        <MenuItem key={index} value={productType}>
-                          {productType}
-                        </MenuItem>
-                      ))}
-                    {field.id === 'type' &&
-                      field.label === 'Tipo de Prémio' &&
-                      achievementsType.map(
-                        (achievementType: string, index: number) => (
-                          <MenuItem key={index} value={achievementType}>
-                            {achievementType}
-                          </MenuItem>
-                        ),
+
+                    {field.id === 'rewardType' &&
+                      formControl[field.id] === 'cash' && (
+                        <TextField
+                          key={index}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          id={'rewardValue'}
+                          type={'number'}
+                          value={
+                            (formControl && formControl['rewardValue']) || ''
+                          }
+                          name={'rewardValue'}
+                          onChange={handleChange}
+                          label={'Valor'}
+                          autoComplete={'number'}
+                          inputProps={{ min: 0 }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position={'end'}>
+                                <EuroSymbolIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
                       )}
-                  </TextField>
+
+                    {field.id === 'rewardType' &&
+                      formControl[field.id] === 'discount' && (
+                        <TextField
+                          key={index}
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          id={'rewardValue'}
+                          type={'number'}
+                          value={
+                            (formControl && formControl['rewardValue']) || ''
+                          }
+                          name={'rewardValue'}
+                          onChange={handleChange}
+                          label={'Valor do Desconto'}
+                          autoComplete={'number'}
+                          inputProps={{ min: 0 }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position={'end'}>
+                                <span style={{ fontWeight: 'bold' }}> %</span>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                  </>
                 );
               }
+
               if (field.isEditable && field.type === 'date') {
                 return (
                   <MobileDatePicker
