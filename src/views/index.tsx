@@ -11,6 +11,7 @@ import MenuView from './MenuView';
 import ProductsView from './ProductsView';
 import { useAuth } from '../contexts/Auth';
 import DashboardView from './DashboardView';
+import ParcelsView from './ParcelsView';
 
 export default function App() {
   const { userLoaded } = useAuth();
@@ -31,6 +32,7 @@ export default function App() {
         />
         <Route path={'/notifications'} component={NotificationsView} />
         <Route path={'/dashboard'} component={DashboardView} />
+        <Route path={'/parcels'} component={ParcelsView} />
       </Switch>
     </Router>
   );

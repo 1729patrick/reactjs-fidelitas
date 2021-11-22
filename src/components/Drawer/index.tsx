@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import InfoIcon from '@material-ui/icons/Info';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+
 import {
   Restaurant,
   PeopleAlt,
   Loyalty,
   Schedule,
-  Star,
   NotificationsActive,
 } from '@material-ui/icons';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -127,7 +124,8 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  console.log('iser', user);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -176,6 +174,9 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 'Notificações':
         history.push('/notifications');
         break;
+      case 'Encomendas':
+        history.push('/parcels');
+        break;
       default:
         history.push('/clients');
     }
@@ -194,6 +195,8 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
       case 4:
         return <Schedule />;
       case 5:
+        return <DeliveryDiningIcon />;
+      case 6:
         return <NotificationsActive />;
       default:
         return '';
@@ -218,6 +221,7 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
           'Clientes',
           'Desafios',
           'Reservas',
+          'Encomendas',
           //  'Sistema de Pontuação',
           'Notificações',
         ].map((text, index) => (
@@ -289,7 +293,9 @@ const ResponsiveDrawer: React.FC<Props> = ({ children }) => {
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
-              onClick={handleClick}>
+              onClick={handleClick}
+              size={'small'}>
+              <h6>{user && user.firstName}</h6>
               <AccountCircleIcon
                 style={{ color: Palette.primaryBackgroundColor, fontSize: 30 }}
               />

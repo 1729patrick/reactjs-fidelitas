@@ -107,7 +107,7 @@ const GeneralInformationView = () => {
   };
   return (
     <ResponsiveDrawer>
-      <div className={classes.root}>
+      <div className={classes.root} style={{ marginTop: '20px' }}>
         <Tabs
           value={valueTabs}
           style={{ maxWidth: '100%' }}

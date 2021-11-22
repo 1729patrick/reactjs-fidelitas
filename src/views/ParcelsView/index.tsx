@@ -1,18 +1,16 @@
-//@ts-ignore-start
 import React, { useEffect, useRef, useState } from 'react';
 import ResponsiveDrawer, { translations } from '../../components/Drawer';
-import ResponsiveTable from '../../components/Table';
-import { useReservations } from '../../api/useReservations';
-import { format } from 'date-fns';
-import api from '../../utils/Api';
-import { useSWRConfig } from 'swr';
-//@ts-ignore-start
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import CreateUpdateModal from '../../components/CreateUpdateModal';
+import AnswerReserveModal from '../ReservesView/components/AnswerReserveModal';
 import { Box, Button, Typography } from '@material-ui/core';
 import { Palette } from '../../utils/Palette';
-import CreateUpdateModal from '../../components/CreateUpdateModal';
 import { useAuth } from '../../contexts/Auth';
-import AnswerReserveModal from './components/AnswerReserveModal';
+
+import { useSWRConfig } from 'swr';
+import api from '../../utils/Api';
+import { format } from 'date-fns';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { usePurchases } from '../../api/usePurchases';
 
 const RESERVE_STATE = {
   CONFIRMED: 'confirmada',
@@ -20,43 +18,6 @@ const RESERVE_STATE = {
   REFUSED: 'Recusada',
 };
 
-const reservesData = [
-  {
-    id: 1,
-    name: 20,
-    adults: 3,
-    kids: 2,
-
-    babies: 0,
-    hours: new Date('2014-08-18T21:12:54'),
-    date: new Date('2014-08-18T21:11:54'),
-    reserveState: RESERVE_STATE.REFUSED,
-    createdAt: new Date('2014-08-18T21:11:54'),
-  },
-  {
-    id: 2,
-    name: 10,
-    adults: 3,
-    kids: 2,
-    babies: 0,
-    hours: new Date('2014-08-18T21:11:54').toLocaleTimeString().substring(0, 5),
-    date: new Date('2014-08-18T21:11:54'),
-    reserveState: RESERVE_STATE.PENDING,
-    createdAt: new Date('2014-08-18T21:11:54'),
-  },
-  {
-    id: 3,
-    name: 30,
-    adults: 3,
-    kids: 2,
-
-    babies: 0,
-    hours: new Date('2014-08-18T20:11:54'),
-    date: new Date('2014-08-18T21:11:54'),
-    reserveState: RESERVE_STATE.CONFIRMED,
-    createdAt: new Date('2014-08-18T21:11:54'),
-  },
-];
 interface HeadCell {
   disablePadding: boolean;
   id: string;
@@ -76,79 +37,24 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'type',
+    id: 'deliveryType',
     numeric: false,
     disablePadding: false,
-    label: 'Tipo de Reserva',
-    type: 'select',
-    isEditable: true,
-  },
-  {
-    id: 'adults',
-    numeric: true,
-    disablePadding: false,
-    label: 'Nº de adultos',
-    type: 'number',
-    isEditable: true,
-  },
-  {
-    id: 'kids',
-    numeric: true,
-    disablePadding: false,
-    label: 'Nº de crianças (Até aos 11 anos)',
-    type: 'number',
-    isEditable: true,
-  },
-  {
-    id: 'babies',
-    numeric: true,
-    disablePadding: false,
-    label: 'Nº de bebés',
-    type: 'number',
-    isEditable: true,
-  },
-  {
-    id: 'status',
-    numeric: true,
-    disablePadding: false,
-    label: 'Estado da Reserva',
-    type: 'select',
-    isEditable: true,
-  },
-  {
-    id: 'time',
-    numeric: true,
-    disablePadding: false,
-    label: 'Horas',
-    type: 'time',
-    isEditable: true,
-  },
-  {
-    id: 'date',
-    numeric: true,
-    disablePadding: false,
-    label: 'Data',
-    type: 'date',
-    isEditable: true,
-  },
-  /* {
-    id: 'reserveState',
-    numeric: false,
-    disablePadding: false,
-    label: 'Estado',
+    label: 'Tipo de Encomenda',
     type: 'text',
     isEditable: true,
   },
   {
-    id: 'createdAt',
+    id: 'total',
     numeric: false,
     disablePadding: false,
-    label: 'Criado em',
-    type: 'date',
-    isEditable: false,
-  },*/
+    label: 'Preço Final',
+    type: 'number',
+    isEditable: true,
+  },
 ];
-const ReservesView = () => {
+
+const ParcelsView = () => {
   const titles = ['Canceladas', 'Pedidos', 'Confirmadas'];
   const [confirm, setConfirm] = useState([]);
   const [inReview, setInReview] = useState([]);
@@ -157,7 +63,7 @@ const ReservesView = () => {
   const [actionTitle, setActionTitle] = useState('');
   const { user } = useAuth();
   const modalDataRef = useRef();
-  const reservations = useReservations();
+  const purchases = usePurchases();
   const { mutate } = useSWRConfig();
   const [openAnswerReserveModal, setOpenAnswerReserveModal] = useState(false);
   const [sourceInd, setSourceInd] = useState('');
@@ -216,17 +122,17 @@ const ReservesView = () => {
   });
 
   useEffect(() => {
-    if (reservations.reservations) {
-      const filteredConfirm = reservations.reservations.filter(
+    if (purchases.purchases) {
+      const filteredConfirm = purchases.purchases.filter(
         // @ts-ignore-start
         r => r.status === 'confirmed',
       );
-      const filteredInReview = reservations.reservations.filter(
+      const filteredInReview = purchases.purchases.filter(
         // @ts-ignore-start
         r => r.status === 'inReview',
       );
       // @ts-ignore-start
-      const filteredCanceled = reservations.reservations.filter(
+      const filteredCanceled = purchases.purchases.filter(
         // @ts-ignore-start
         r => r.status === 'canceled',
       );
@@ -240,74 +146,17 @@ const ReservesView = () => {
 
       setCanceled([...filteredCanceled]);
     }
-  }, [reservations.reservations]);
+  }, [purchases.purchases]);
 
-  const onSubmit = async (formControl: any, time?: any, date?: any) => {
-    console.log(user); // user always undefined dont know why
-    const achievement = await api.post('/user/reservations', {
-      type: formControl['type'],
-      status: formControl['status'],
-      date: date && format(date, 'P'),
-      time: time && format(time, 'hh:mm'),
-      adults: formControl['adults'],
-      kids: formControl['kids'],
-      babies: formControl['babies'],
-      // restaurantId: user.restaurantId,
-    });
+  const onSubmit = async (formControl: any, time?: any, date?: any) => {};
 
-    if (achievement.status === 200) {
-      mutate('/restaurants/reservations');
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const onUpdate = async (
-    reservationId: any,
-    status: any,
-    adminNotes?: string,
-  ) => {
-    console.log('reservation', reservationId);
-    const achievement = await api.put(
-      '/restaurants/reservations/' + reservationId.id,
-      {
-        status: status,
-        adminNotes: adminNotes,
-      },
-    );
-
-    if (achievement.status === 200) {
-      mutate('/restaurants/reservations');
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const onUpdate = async () => {};
 
   const onUpdateToCancel = async (
     reservation: any,
     status: string,
     changedData: any,
-  ) => {
-    console.log('changedData', changedData);
-    const achievement = await api.put(
-      '/restaurants/reservations/' + reservation.id,
-      {
-        time: changedData.time,
-        date: changedData.date,
-        status: status,
-        adminNotes: changedData.message,
-      },
-    );
-
-    if (achievement.status === 200) {
-      mutate('/restaurants/reservations');
-      return true;
-    } else {
-      return false;
-    }
-  };
+  ) => {};
 
   const handleModal = (title?: string, data?: any) => {
     //useRef para transportar dados se existirem para dentro dos fields do modal
@@ -408,7 +257,7 @@ const ReservesView = () => {
         setCanceled([...result[sInd]]);
         // @ts-ignore-start
         auxDrop(dInd, result);
-        onUpdate(canceled[source.index], destinationToStatus(dInd));
+        //   onUpdate(canceled[source.index], destinationToStatus(dInd));
       } else if (sInd === 1) {
         if (destinationToStatus(dInd) === 'canceled') {
           modalDataRef.current = inReview[source.index];
@@ -429,7 +278,7 @@ const ReservesView = () => {
           setInReview([...result[sInd]]);
           // @ts-ignore-start
           auxDrop(dInd, result);
-          onUpdate(inReview[source.index], destinationToStatus(dInd));
+          //  onUpdate(inReview[source.index], destinationToStatus(dInd));
         }
       } else {
         if (destinationToStatus(dInd) === 'canceled') {
@@ -451,15 +300,15 @@ const ReservesView = () => {
           setConfirm([...result[sInd]]);
           // @ts-ignore-start
           auxDrop(dInd, result);
-          onUpdate(confirm[source.index], destinationToStatus(dInd));
+          //     onUpdate(confirm[source.index], destinationToStatus(dInd));
         }
       }
     }
   }
 
-  //Fim do drag and drop code
+  // end of drag and drop code
 
-  const renderReserve = (item: any) => {
+  const renderParcel = (item: any) => {
     return (
       <div
         style={{
@@ -472,8 +321,8 @@ const ReservesView = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <span>Nome: {item.firstName}</span>
-          <span>Tipo: {item.type}</span>
+          <span>UserId: {item.userId}</span>
+          <span>Tipo: {item.deliveryType}</span>
         </div>
         <div
           style={{
@@ -483,9 +332,9 @@ const ReservesView = () => {
             marginTop: '10px',
             marginBottom: '10px',
           }}>
-          <span>Adultos: {item.adults}</span>
-          <span>Crianças: {item.kids}</span>
-          <span>Bebés: {item.babies}</span>
+          <span>Morada: {item.addressId}</span>
+
+          <span>Total: {item.total}</span>
         </div>
         <div
           style={{
@@ -502,6 +351,8 @@ const ReservesView = () => {
     );
   };
 
+  console.log('purchases', purchases);
+
   return (
     <>
       {openModal && (
@@ -512,7 +363,7 @@ const ReservesView = () => {
           title={'Reserva'}
           dataRef={modalDataRef}
           actionTitle={actionTitle}
-          onSubmit={onSubmit}
+          //onSubmit={onSubmit}
           reserve={true}
         />
       )}
@@ -520,7 +371,7 @@ const ReservesView = () => {
         <AnswerReserveModal
           handleCloseModal={() => handleAnswerReserveModal()}
           dataRef={modalDataRef}
-          onUpdate={onUpdateToCancel}
+          //onUpdate={onUpdateToCancel}
           move={move}
           auxDrop={auxDrop}
           sourceIndex={sourceInd}
@@ -536,7 +387,7 @@ const ReservesView = () => {
         />
       )}
       <ResponsiveDrawer>
-        {reservations.reservations ? (
+        {purchases.purchases ? (
           <div
             style={{ display: 'flex', width: '100%', flexDirection: 'column' }}>
             <Box display="flex" mb={3} mt={3} justifyContent="space-between">
@@ -605,7 +456,7 @@ const ReservesView = () => {
                                       )}>
                                       {
                                         //@ts-ignore
-                                        renderReserve(item)
+                                        renderParcel(item)
                                       }
                                     </div>
                                   )
@@ -663,7 +514,7 @@ const ReservesView = () => {
                                       )}>
                                       {
                                         //@ts-ignore
-                                        renderReserve(item)
+                                        renderParcel(item)
                                       }
                                     </div>
                                   )
@@ -721,7 +572,7 @@ const ReservesView = () => {
                                       )}>
                                       {
                                         //@ts-ignore
-                                        renderReserve(item)
+                                        renderParcel(item)
                                       }
                                     </div>
                                   )
@@ -745,14 +596,4 @@ const ReservesView = () => {
     </>
   );
 };
-
-export default ReservesView;
-/*  <ResponsiveTable
-          data={reservations.reservations}
-          fields={headCells}
-          actions={true}
-          title={'Reserva'}
-          reserve={true}
-          onSubmit={onSubmit}
-          onUpdate={onUpdate}
-      />*/
+export default ParcelsView;

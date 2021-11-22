@@ -11,6 +11,15 @@ type LoginArgs = {
   restaurantId?: number;
 };
 
+type UserType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  type: string;
+  phone: string;
+  restaurantId: string;
+};
+
 type ContextProps = {
   user?: any;
   token?: string;
@@ -34,8 +43,12 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('@fidelitas:token');
+    const user = localStorage.getItem('@fidelitas:user');
     if (token) {
       restoreToken(token);
+    }
+    if (user) {
+      restoreUser(user);
     }
   }, []);
 
@@ -57,6 +70,11 @@ export const AuthProvider: React.FC = ({ children }) => {
     setAuthorization(token);
     setToken(token);
     setUserLoaded(true);
+  }
+
+  function restoreUser(user: string) {
+    //  console.log('user123', JSON.parse(user));
+    setUser(user);
   }
 
   const login = async (args: LoginArgs) => {

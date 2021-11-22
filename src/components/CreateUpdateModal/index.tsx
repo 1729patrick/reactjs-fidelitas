@@ -12,22 +12,8 @@ import {
   InputLabel,
   TextField,
 } from '@material-ui/core';
-import {
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import DateFnsUtils from '@date-io/date-fns';
-import api from '../../utils/Api';
-import { useAuth } from '../../contexts/Auth';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import {
-  DatePicker,
-  LocalizationProvider,
-  MobileDatePicker,
-  TimePicker,
-} from '@mui/lab';
+import { LocalizationProvider, MobileDatePicker, TimePicker } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import {
   Autocomplete,
@@ -54,6 +40,9 @@ const productsType = [
   'drink',
   'special',
 ];
+
+const reserveType = ['breakfast', 'lunch', 'dinner'];
+const reserveState = ['Canceled', 'Request', 'Confirmed'];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -151,6 +140,7 @@ const CreateUpdateModal: React.FC<Props> = ({
     if (actionTitle === 'Adicionar') {
       if (onSubmit) {
         if (reserve) {
+          console.log('OLHAA', formControl);
           result = await onSubmit(formControl, selectedDate, selectedTime);
         } else {
           result = await onSubmit(formControl);
@@ -292,6 +282,20 @@ const CreateUpdateModal: React.FC<Props> = ({
                             </MenuItem>
                           ),
                         )}
+                      {field.id === 'type' &&
+                        field.label === 'Tipo de Reserva' &&
+                        reserveType.map((type: string, index: number) => (
+                          <MenuItem key={index} value={type}>
+                            {type}
+                          </MenuItem>
+                        ))}
+                      {field.id === 'status' &&
+                        field.label === 'Estado da Reserva' &&
+                        reserveState.map((state: string, index: number) => (
+                          <MenuItem key={index} value={state}>
+                            {state}
+                          </MenuItem>
+                        ))}
                     </TextField>
 
                     {field.id === 'rewardType' &&

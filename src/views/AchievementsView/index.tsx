@@ -74,7 +74,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'rewardTitle',
+    id: 'reward',
     numeric: false,
     disablePadding: false,
     label: 'Prémio',
@@ -82,7 +82,7 @@ const headCells: HeadCell[] = [
     isEditable: true,
   },
   {
-    id: 'rewardType',
+    id: 'type',
     numeric: false,
     disablePadding: false,
     label: 'Tipo de Prémio',

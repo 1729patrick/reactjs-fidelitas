@@ -19,6 +19,9 @@ import clsx from 'clsx';
 import { AccessTime, Euro, Group, People } from '@material-ui/icons';
 import { LocalizationProvider, MobileDatePicker, TimePicker } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
+import { MenuItem } from '@mui/material';
+
+const reserveType = ['breakfast', 'lunch', 'dinner'];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,30 +56,97 @@ type Props = {
   handleCloseModal: () => void;
   dataRef: any;
   onUpdate?: (...args: any) => Promise<boolean>;
+  move: any;
+  auxDrop: any;
+  confirmed: {}[];
+  inReview: {}[];
+  setConfirmed: any;
+  setInReview: any;
+  sourceIndex: string;
+  destinationIndex: number;
+  actualSource: any;
+  actualDestination: string;
+  destinationToStatus: (
+    destinationId: number,
+  ) => 'canceled' | 'inReview' | 'confirmed' | undefined;
+  destinationIdToState: (id: number) => any;
 };
 
 const AnswerReserveModal: React.FC<Props> = ({
   handleCloseModal,
   dataRef,
   onUpdate,
+  move,
+  auxDrop,
+  confirmed,
+  inReview,
+  setConfirmed,
+  setInReview,
+  sourceIndex,
+  destinationIndex,
+  actualSource,
+  actualDestination,
+  destinationToStatus,
+  destinationIdToState,
 }) => {
   const classes = useStyles();
 
-  const [time, setTime] = useState();
+  const [time, setTime] = useState(dataRef?.current.time);
 
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(dataRef?.current.date);
 
   const [message, setMessage] = useState('');
+  const [type, setType] = useState(dataRef?.current.type);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
-
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setType(event.target.value);
+  };
   const onSubmit = (event: any) => {
     event.preventDefault();
-    if (onUpdate) onUpdate();
-  };
+    if (onUpdate) {
+      const dataToUpdate = { time, date, message, type };
+      if (sourceIndex === 'inReview') {
+        const result = move(
+          inReview,
+          destinationIdToState(destinationIndex),
+          actualSource,
+          actualDestination,
+        );
+        // @ts-ignore-start
 
+        setInReview([...result[+actualSource.droppableId]]);
+        // @ts-ignore-start
+        auxDrop(+actualDestination.droppableId, result);
+        onUpdate(
+          inReview[actualSource.index],
+          destinationToStatus(destinationIndex),
+          dataToUpdate,
+        );
+      }
+      if (sourceIndex === 'confirmed') {
+        const result = move(
+          confirmed,
+          destinationIdToState(destinationIndex),
+          actualSource,
+          actualDestination,
+        );
+        // @ts-ignore-start
+
+        setConfirmed([...result[+actualSource.droppableId]]);
+        // @ts-ignore-start
+        auxDrop(+actualDestination.droppableId, result);
+        onUpdate(
+          confirmed[actualSource.index],
+          destinationToStatus(destinationIndex),
+          dataToUpdate,
+        );
+      }
+    }
+  };
+  console.log('dataRef', dataRef);
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Modal
@@ -140,6 +210,26 @@ const AnswerReserveModal: React.FC<Props> = ({
                 />
               )}
             />
+
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id={'type'}
+              type={'text'}
+              name={'Tipo'}
+              value={type && type}
+              onChange={handleTypeChange}
+              label={'Tipo'}
+              autoFocus
+              select>
+              {reserveType.map((type: string, index: number) => (
+                <MenuItem key={index} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               variant="outlined"
               margin="normal"
@@ -148,11 +238,12 @@ const AnswerReserveModal: React.FC<Props> = ({
               id={'message'}
               type={'text'}
               name={'Horas'}
-              onChange={handleChange}
+              onChange={handleMessageChange}
               label={'Mensagem'}
               multiline
               autoFocus
             />
+
             <div
               style={{
                 display: 'flex',

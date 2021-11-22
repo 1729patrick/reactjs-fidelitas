@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import IconButton from '@material-ui/core/IconButton';
+
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -30,7 +30,16 @@ import AnswerReserveModal from '../../views/ReservesView/components/AnswerReserv
 import ConfirmDialog, { DialogHandler } from '../ConfirmDialog';
 import NotificationModal from '../../views/ClientsView/components/NotificationModal';
 import { useProduct } from '../../api/useProducts';
-
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import UserInfoCard from '../../views/GeneralInformationView/components/UserInfoTab/UserInfoCard';
+import RestaurantInfoCard from '../../views/GeneralInformationView/components/RestaurantInfoTab/RestaurantInfoCard';
+import WorkHoursCard from '../../views/GeneralInformationView/components/WorkHoursTab/WorkHoursCard';
+import FacilitiesCard from '../../views/GeneralInformationView/components/FacilitiesTab/FacilitiesCard';
+import MobileAppCard from '../../views/GeneralInformationView/components/MobileAppCard';
+import ProductsTabs from './ProductsTabs';
+import { IconButton } from '@mui/material';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 interface Data {
   calories: number;
   carbs: number;
@@ -312,11 +321,18 @@ const ResponsiveTable: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
-      <Box display="flex" mb={3} mt={3} justifyContent="space-between">
+      <Box
+        display="flex"
+        mb={3}
+        mt={3}
+        justifyContent="space-between"
+        alignItems={'center'}>
         <Typography variant="h6">
           {translations[location.pathname.substring(1)]}
         </Typography>
-
+        {/*translations[location.pathname.substring(1)] === 'Produtos' && (
+          <ProductsTabs />
+        )*/}
         {actions && (
           <Button
             style={{
@@ -377,13 +393,7 @@ const ResponsiveTable: React.FC<Props> = ({
             {openConfigModal && (
               <ConfigModal handleCloseModal={handleConfigModal} />
             )}
-            {openAnswerReserveModal && (
-              <AnswerReserveModal
-                handleCloseModal={() => handleAnswerReserveModal()}
-                dataRef={modalDataRef}
-                onUpdate={onUpdate}
-              />
-            )}
+
             {openSendNotificationModal && (
               <NotificationModal
                 open={openSendNotificationModal}
